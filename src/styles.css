@@ -1,0 +1,91 @@
+body {
+    font-family: Arial, sans-serif;
+    text-align: right;
+    width: 100vw;
+    height: 100vh;
+    margin: 0;
+    display: grid;
+    grid-template-columns: repeat(12, 1fr);
+    grid-template-rows: repeat(12, 1fr);
+  }
+  .header {
+    grid-column: 1 / 13;
+    grid-row: 1 / 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem;
+    background: linear-gradient(to right, #ffafcc, #bde0fe, #cdb4db, #a2d2ff);
+    position: relative;
+  }
+  #actions {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    width: 250px;
+    padding: 0.4em;
+    border-radius: 20px;
+    visibility: hidden;
+    background-color: white;
+    opacity: 0;
+    top: 115%;
+    right: 1%;
+    transition: all 0.5s ease-in-out;
+
+  }
+  .action-item{
+    display: flex;
+    align-items: center;
+   
+  
+  }
+  .action-item:hover{
+    transform: scale(0.8);
+    background-color: #a2d2ff;
+    border-radius: 40px;
+    padding-right: 2.3em;
+  }
+
+  #actions button {
+    border-style: none;
+    color: black;
+    margin: 0.4em;
+    margin-right: -0.2em;
+    padding: 0.3em;
+    font-size: 2.3em;
+    background-color: transparent;
+    font-weight: 700;
+    border-radius: 40px;
+  }
+  .container{
+    grid-column: 1 / 13;
+    grid-row: 2 / 13;
+    display: flex;
+    justify-content: center;
+  
+  }
+  .task-list{
+    margin-top: 3em;
+  }
+
+  .list-headers, .work-item{
+    background-color: #a2d2ff;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    gap: 15em;
+    width: 70vw;
+    padding: 1.5em;
+    margin: 0.7em;
+    border-radius: 10px;
+    font-weight: 700;
+
+  }
+ 
+  .work-item{
+     background-color: #fce6ee;
+     border: 1px solid black;
+     height: 0.1em;
+     font-weight: 400;
+
+  }
