@@ -1,11 +1,48 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
-</head>
-<body>
-  
-</body>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Care App</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        text-align: right;
+      }
+      .header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem;
+      }
+      #actions {
+        display: flex;
+        gap: 1rem;
+      }
+      button {
+        padding: 0.5rem 1rem;
+        border-radius: 4px;
+        border: 1px solid #ccc;
+        background-color: #fff;
+        cursor: pointer;
+      }
+      button:hover {
+        background-color: #f0f0f0;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="header">
+      <div id="actions" style="visibility: hidden">
+        <button id="profile-home">אוכל</button>
+        <button id="profile-favorites">שינה</button>
+        <button id="profile-explore">שתייה</button>
+        <button id="profile-settings">מקלחת</button>
+      </div>
+      <img src="./assets/menu.png" alt="menu-icon" id="menu-icon" />
+    <div class="container">
+    
+      </div>
+    </div>
+  </body>
 </html>
