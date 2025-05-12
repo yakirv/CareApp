@@ -1,24 +1,31 @@
 body {
     font-family: Arial, sans-serif;
     text-align: right;
-    width: 100vw;
-    height: 100vh;
+    width: 100%;
+    min-height: 100vh;
     margin: 0;
     display: grid;
-    grid-template-columns: repeat(12, 1fr);
-    grid-template-rows: repeat(12, 1fr);
-  }
-  .header {
-    grid-column: 1 / 13;
-    grid-row: 1 / 2;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto 1fr;
+    overflow-x: hidden;
+}
+
+.header {
+    grid-column: 1;
+    grid-row: 1;
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 1rem;
     background: linear-gradient(to right, #ffafcc, #bde0fe, #cdb4db, #a2d2ff);
     position: relative;
-  }
-  #actions {
+    flex-wrap: wrap;
+}
+#menu-icon
+{
+    height: 60px;
+}
+#actions {
     display: flex;
     flex-direction: column;
     position: absolute;
@@ -27,26 +34,23 @@ body {
     border-radius: 20px;
     visibility: hidden;
     background-color: white;
+    box-shadow: 0 4px 10px 10px rgba(0, 0, 0, 0.1);
     opacity: 0;
-    top: 115%;
+    top: 110%;
     right: 1%;
-    transition: all 0.5s ease-in-out;
-
-  }
-  .action-item{
+    transition: all 0.3s ease-in-out;
+}
+.action-item{
     display: flex;
     align-items: center;
-   
-  
-  }
-  .action-item:hover{
+}
+.action-item:hover{
     transform: scale(0.8);
     background-color: #a2d2ff;
     border-radius: 40px;
     padding-right: 2.3em;
-  }
-
-  #actions button {
+}
+#actions button {
     border-style: none;
     color: black;
     margin: 0.4em;
@@ -56,36 +60,172 @@ body {
     background-color: transparent;
     font-weight: 700;
     border-radius: 40px;
-  }
-  .container{
-    grid-column: 1 / 13;
-    grid-row: 2 / 13;
+}
+.container{
+    grid-column: 1;
+    grid-row: 2;
     display: flex;
     justify-content: center;
-  
-  }
-  .task-list{
-    margin-top: 3em;
-  }
-
-  .list-headers, .work-item{
+    width: 100%;
+    padding: 1rem;
+    box-sizing: border-box;
+}
+.task-list{
+    margin-top: 1em;
+    width: 100%;
+    max-width: 1200px;
+}
+.list-headers, .work-item{
     background-color: #a2d2ff;
     display: flex;
-    justify-content: flex-start;
+    justify-content: space-between;
     align-items: center;
-    gap: 15em;
-    width: 70vw;
+    gap: 1em;
+    width: 100%;
     padding: 1.5em;
-    margin: 0.7em;
+    margin: 0.7em 0;
     border-radius: 10px;
     font-weight: 700;
-
-  }
- 
+   
+    box-sizing: border-box;
+}
+#work-item-action
+{
+    background-color: transparent;
+    color: #16db65;
+    border: 1px solid #16db65;
+    border-radius: 10px;
+    padding: 0.3em 0.7em;
+    cursor: pointer;
+}
+#work-item-action:hover{
+   color: white;
+   border: 2px solid white;
+   font-weight: 700;
+}
+ .waiting{
+    background-color: #edd7a0;
+    color: #d16d2f;
+    padding: 0.8em;
+    font-size: 12px;
+    border-radius: 10px;
+ }
   .work-item{
-     background-color: #fce6ee;
+     background-color:transparent;
      border: 1px solid black;
-     height: 0.1em;
+     height: 2.6em;
      font-weight: 400;
-
+     gap: 2em;
   }
+  .work-item:hover{
+    background-color: #eae8e8;
+ }
+
+/* Tablet Styles */
+@media screen and (max-width: 1024px) {
+    .container {
+        padding: 0.5rem;
+    }
+
+    .list-headers, .work-item {
+        padding: 1.2em;
+        gap: 1em;
+    }
+
+    #actions {
+        width: 200px;
+    }
+
+    #actions button {
+        font-size: 1.8em;
+    }
+}
+
+/* Mobile Styles */
+@media screen and (max-width: 768px) {
+    
+
+    .list-headers, .work-item {
+        padding: 1em;
+        gap: 0.8em;
+        font-size: 0.9em;
+    }
+
+    #actions {
+        width: 70vw;
+        right: 1.4%;
+        height: 70vh;
+
+    }
+
+    #actions button {
+        font-size: 1.5em;
+        margin: 0.3em;
+    }
+
+    .action-item:hover {
+        padding-right: 1.5em;
+    }
+#work-item-action
+{
+    padding: 0.1em 0.5em;
+    margin-left: -2%;
+}
+    .waiting {
+        padding: 0.5em;
+        font-size: 10px;
+    }
+
+    .task-list {
+        margin-top: 0.5em;
+    }
+}
+
+/* Small Mobile Styles */
+@media screen and (max-width: 480px) {
+    .header {
+        padding: 0.3rem;
+    }
+
+    .list-headers, .work-item {
+        padding: 0.8em;
+        gap: 0.5em;
+        font-size: 0.8em;
+        margin: 0.5em 0;
+    }
+
+   
+
+    #actions button {
+        font-size: 1.2em;
+        margin: 0.2em;
+    }
+
+    .action-item:hover {
+        padding-right: 1em;
+    }
+
+    .container {
+        padding: 0.3rem;
+    }
+}
+
+/* Landscape Mode */
+@media screen and (max-height: 480px) and (orientation: landscape) {
+    .header {
+        padding: 0.3rem;
+    }
+
+    .container {
+        padding: 0.3rem;
+    }
+
+    .task-list {
+        margin-top: 0.3em;
+    }
+
+    .list-headers, .work-item {
+        padding: 0.5em;
+        margin: 0.3em 0;
+    }
+}
