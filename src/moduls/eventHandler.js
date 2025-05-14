@@ -1,5 +1,6 @@
 import { ui } from '..'
 import { validations } from '..'
+import { storage } from '..'
 
 export class EventHandler {
     addFood
@@ -35,6 +36,7 @@ export class EventHandler {
 
             if (validateName.isvalid && validateDesc.isvalid) {
                 ui.newWorkItem(taskName, taskDesc)
+                storage.storeTasks(taskName, taskDesc)
                 newTaskForm.reset()
             }
         })
@@ -42,11 +44,13 @@ export class EventHandler {
     clickAddFood() {
         this.addFood.addEventListener('click', () => {
             ui.newWorkItem('נוטרילון', '200 מ״ל')
+            storage.storeTasks('נוטרילון', '200 מ״ל')
         })
     }
     clickAddSleep() {
         this.addSleep.addEventListener('click', () => {
             ui.newWorkItem('שינה', 'שעתיים')
+            storage.storeTasks('שינה', 'שעתיים')
         })
     }
 }

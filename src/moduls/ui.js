@@ -1,3 +1,5 @@
+import { storage } from '..'
+
 export class UI {
     workItemList
     menuIcon
@@ -9,6 +11,7 @@ export class UI {
             this.menuIcon = document.getElementById('menu-icon')
             this.actions = document.getElementById('actions')
             this.initializeMenu()
+            this.renderTasksList()
         })
     }
     initializeMenu() {
@@ -34,6 +37,15 @@ export class UI {
             this.actions.style.visibility = 'hidden'
             this.actions.style.opacity = '0'
         })
+    }
+
+    renderTasksList() {
+        const storedString = JSON.parse(localStorage.getItem('tasksList'))
+        if (storedString) {
+            for (let i = 0; i < storedString.length; i++) {
+                this.newWorkItem(storedString[i].name, storedString[i].desc)
+            }
+        }
     }
     newWorkItem(name, desc) {
         const newWorkItem = document.createElement('div')
