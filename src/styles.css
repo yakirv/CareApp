@@ -183,9 +183,18 @@ input {
     #new-task-form {
         display: flex;
         gap: 1em;
-
         flex-direction: column;
         align-items: flex-end;
+    }
+    #new-item-form,
+    #menu-icon {
+        margin-top: 30%;
+    }
+    .header {
+        align-items: flex-start;
+    }
+    input {
+        height: 0.5em;
     }
     .list-headers,
     .work-item {
@@ -193,12 +202,19 @@ input {
         gap: 0.8em;
         font-size: 0.9em;
     }
+    .work-item span {
+        margin: 20px;
+    }
 
     #actions {
         width: 70vw;
         left: 1.2%;
         top: 105%;
         height: 70vh;
+    }
+    #work-item-status {
+        height: 1em;
+        padding: 8px;
     }
 
     #actions button {
