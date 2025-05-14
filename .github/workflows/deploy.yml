@@ -4,12 +4,21 @@ on:
     push:
         branches: [main] # or your default branch
 
+# Add permissions needed for GitHub Pages
+permissions:
+    contents: write # Changed from read to write for repository contents
+    pages: write
+    id-token: write
+
 jobs:
     build-and-deploy:
         runs-on: ubuntu-latest
         steps:
             - name: Checkout
               uses: actions/checkout@v3
+              with:
+                  persist-credentials: true # Ensure credentials are persisted
+                  fetch-depth: 0 # Fetch all history for proper git operations
 
             - name: Setup Node.js
               uses: actions/setup-node@v3
@@ -23,8 +32,16 @@ jobs:
             - name: Build
               run: npm run build
 
-            - name: Deploy to GitHub Pages
-              uses: JamesIves/github-pages-deploy-action@v4
-              with:
-                  folder: dist # The folder the action should deploy
-                  branch: gh-pages # The branch the action should deploy to
+            # Configure Git user
+            - name: Configure Git
+              run: |
+                  git config --global user.name "GitHub Actions"
+                  git config --global user.email "github-actions@github.com"
+
+            # Deploy using gh-pages package (alternative method)
+            - name: Deploy with gh-pages
+              run: |
+                  git remote set-url origin https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}
+                  npx gh-pages -d dist -u "github-actions-bot <support+actions@github.com>"
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
