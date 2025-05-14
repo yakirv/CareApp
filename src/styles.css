@@ -114,15 +114,24 @@ input{
     display: flex;
     justify-content: space-between;
     align-items: center;
-    gap: 1em;
     width: 100%;
     padding: 1.5em;
     margin: 0.7em 0;
     border-radius: 10px;
     font-weight: 700;
-   
     box-sizing: border-box;
 }
+.work-item
+{
+    gap: 14em;
+}
+#work-item-status
+{
+    text-wrap: nowrap;
+    padding: 1em;
+    text-align: center;
+}
+
 #work-item-action
 {
     background-color: transparent;
@@ -131,6 +140,7 @@ input{
     border-radius: 10px;
     padding: 0.3em 0.7em;
     cursor: pointer;
+    text-wrap: nowrap;
 }
 #work-item-action:hover{
    color: white;
@@ -149,7 +159,7 @@ input{
      border: 1px solid black;
      height: 2.6em;
      font-weight: 400;
-     gap: 2em;
+ 
   }
   .work-item:hover{
     background-color: #eae8e8;
