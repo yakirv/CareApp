@@ -9,7 +9,7 @@ module.exports = {
     output: {
         filename: 'main.js',
         path: path.resolve(__dirname, 'dist'),
-        publicPath: '/CareApp/',
+        // publicPath: '/CareApp/',
         clean: true,
     },
 
@@ -26,7 +26,7 @@ module.exports = {
     plugins: [
         new HtmlWebpackPlugin({
             template: './src/template.html',
-            filename: 'template.html',
+            //    filename: 'template.html',
         }),
     ],
 
