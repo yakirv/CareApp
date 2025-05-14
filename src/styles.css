@@ -16,11 +16,45 @@ body {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    gap: 2em;
     padding: 1rem;
     background: linear-gradient(to right, #ffafcc, #bde0fe, #cdb4db, #a2d2ff);
     position: relative;
-    flex-wrap: wrap;
+  
 }
+#new-task-form
+{
+    
+    display: flex;
+    align-items: center;
+    gap: 1em;
+}
+input{
+    border-radius: 20px;
+    border-style: none;
+    border: 3px solid white;
+    height: 1.8em;
+    width: 15em;
+    padding:  0.5em 1em ;
+  
+}
+ #submit-new-task
+ {
+    background-image: url('./assets/submit.png');
+    background-size: cover;
+     width: 3em;
+    height: 3em;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+    transition: background-image 0.3s ease-in-out;
+    
+ }
+ #submit-new-task:hover
+ {
+    background-image: url('./assets/submit_active.png');
+ }
+
 #menu-icon
 {
     height: 60px;
@@ -37,7 +71,7 @@ body {
     box-shadow: 0 4px 10px 10px rgba(0, 0, 0, 0.1);
     opacity: 0;
     top: 110%;
-    right: 1%;
+    left: 1%;
     transition: all 0.3s ease-in-out;
 }
 .action-item{
@@ -45,10 +79,10 @@ body {
     align-items: center;
 }
 .action-item:hover{
-    transform: scale(0.8);
+    transform: scale(1);
     background-color: #a2d2ff;
     border-radius: 40px;
-    padding-right: 2.3em;
+    padding-right: 3.3em;
 }
 #actions button {
     border-style: none;
@@ -120,6 +154,10 @@ body {
   .work-item:hover{
     background-color: #eae8e8;
  }
+ .work-item span
+ {
+    width: 7em;
+ }
 
 /* Tablet Styles */
 @media screen and (max-width: 1024px) {
@@ -143,8 +181,15 @@ body {
 
 /* Mobile Styles */
 @media screen and (max-width: 768px) {
-    
+    #new-task-form
+    {
 
+        display: flex;
+        gap: 1em;
+       
+        flex-direction: column;
+        align-items: flex-end;
+    }
     .list-headers, .work-item {
         padding: 1em;
         gap: 0.8em;
@@ -153,7 +198,8 @@ body {
 
     #actions {
         width: 70vw;
-        right: 1.4%;
+        left: 1.2%;
+        top: 105%;
         height: 70vh;
 
     }

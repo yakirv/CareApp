@@ -1,4 +1,10 @@
-import { Menu } from "./moduls/menu";
+
+import { EventHandler } from "./moduls/eventHandler";
+import { UI } from    "./moduls/ui"
+import { Validations } from "./moduls/validations";
 import "./styles.css";
 
-const menu = new Menu();
+
+export const eventHandler = new EventHandler();
+export const ui = new UI()
+export const validations = new Validations()
