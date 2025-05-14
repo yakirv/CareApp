@@ -2,10 +2,42 @@
 <html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Care App">
+    <meta name="theme-color" content="#ffffff">
     <title>Care App</title>
+    <link rel="apple-touch-icon" href="./assets/appIcon.png">
     <style>
-    
+      body {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      
+      .container {
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 1000;
+        padding: env(safe-area-inset-top) 0 0 0;
+      }
     </style>
   </head>
   <body>
