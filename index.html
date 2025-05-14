@@ -1,15 +1,71 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-  <script defer src="main.js"></script></head>
+    <title>Care App</title>
+    <style>
+    
+    </style>
+  <script defer src="/CareApp/main.js"></script></head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h1>Header</h1>
+    <div class="header">
+      <div id="new-item-form">
+        <form id="new-task-form">
+          <div class="form-group">
+            <label for="task-name">שם:</label>
+            <input type="text" id="task-name" name="new-task-name" required>
+          </div>
+          <div class="form-group">
+            <label for="task-description">תיאור:</label>
+            <input type="text" id="task-description" name="new-task-description" required>
+          </div>
+          <button type="submit" id="submit-new-task"></button>
+        </form>
+        </div>
+      <div id="actions" style="visibility: hidden">
+              <div class="action-item" id="add-food-action">
+          <img class="action-icon" src="/CareApp/c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-food">אוכל </button>
+        </div>
+        <div class="action-item" id="add-sleep-action">
+          <img class="action-icon" src="/CareApp/c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-sleep">שינה </button>
+        </div>
+        <div class="action-item" id="add-drink-action">
+          <img class="action-icon" src="/CareApp/c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-drink">שתייה </button>
+        </div>
+        <div class="action-item" id="add-shower-action">
+          <img class="action-icon" src="/CareApp/c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-shower">מקלחת </button>
+        </div>
+      
       </div>
+      <img src="/CareApp/5cb191d6ff47e6ab6305.png" alt="menu-icon" id="menu-icon" />
     </div>
+    <div class="container">
+      <div class="task-list">
+       <div class="list-headers">
+        <div id="header-item-name">משימה</div>
+        <div id="header-item-status" >סטטוס</div>
+        <div id="header-item-description">תיאור</div>
+        <div id="header-item-time">שעה</div>
+        <div id="header-item-time">פעולות</div>
+    
+      </div>
+      <div class="work-item-list">
+     <!--    <div class="work-item">
+          <div id="work-item-name">נוטרילון</div>
+          <div id="work-item-status" class="waiting">ממתין לביצוע</div>
+          <div id="work-item-desc">200 מ״ל</div>
+          <div id="work-item-hour">-</div>
+          <button id="work-item-action">סמן כבוצע</button>
+        </div> -->
+      </div>
+    
+    </div>
+      </div>
+    
   </body>
 </html>
