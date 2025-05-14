@@ -1,15 +1,103 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="he" dir="rtl">
   <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Care App">
+    <meta name="theme-color" content="#ffffff">
+    <title>Care App</title>
+    <link rel="apple-touch-icon" href="c3d0666bfcbd9b846f72.png">
+    <style>
+      body {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        user-select: none;
+        -webkit-tap-highlight-color: transparent;
+        overscroll-behavior: none;
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+      }
+      
+      .container {
+        height: calc(100vh - 60px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+      }
+      
+      .header {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background: #fff;
+        z-index: 1000;
+        padding: env(safe-area-inset-top) 0 0 0;
+      }
+    </style>
   <script defer src="main.js"></script></head>
   <body>
-    <div class="container">
-      <div class="header">
-        <h1>Header</h1>
+    <div class="header">
+      <div id="new-item-form">
+        <form id="new-task-form">
+          <div class="form-group">
+            <label for="task-name">שם:</label>
+            <input type="text" id="task-name" name="new-task-name" required>
+          </div>
+          <div class="form-group">
+            <label for="task-description">תיאור:</label>
+            <input type="text" id="task-description" name="new-task-description" required>
+          </div>
+          <button type="submit" id="submit-new-task"></button>
+        </form>
+        </div>
+      <div id="actions" style="visibility: hidden">
+              <div class="action-item" id="add-food-action">
+          <img class="action-icon" src="c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-food">אוכל </button>
+        </div>
+        <div class="action-item" id="add-sleep-action">
+          <img class="action-icon" src="c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-sleep">שינה </button>
+        </div>
+        <div class="action-item" id="add-drink-action">
+          <img class="action-icon" src="c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-drink">שתייה </button>
+        </div>
+        <div class="action-item" id="add-shower-action">
+          <img class="action-icon" src="c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <button id="add-shower">מקלחת </button>
+        </div>
+      
       </div>
+      <img src="5cb191d6ff47e6ab6305.png" alt="menu-icon" id="menu-icon" />
     </div>
+    <div class="container">
+      <div class="task-list">
+       <div class="list-headers">
+        <div id="header-item-name">משימה</div>
+        <div id="header-item-status" >סטטוס</div>
+        <div id="header-item-description">תיאור</div>
+        <div id="header-item-time">שעה</div>
+        <div id="header-item-time">פעולות</div>
+    
+      </div>
+      <div class="work-item-list">
+     <!--    <div class="work-item">
+          <div id="work-item-name">נוטרילון</div>
+          <div id="work-item-status" class="waiting">ממתין לביצוע</div>
+          <div id="work-item-desc">200 מ״ל</div>
+          <div id="work-item-hour">-</div>
+          <button id="work-item-action">סמן כבוצע</button>
+        </div> -->
+      </div>
+    
+    </div>
+      </div>
+    
   </body>
 </html>
