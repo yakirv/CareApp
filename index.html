@@ -9,36 +9,6 @@
     <meta name="theme-color" content="#ffffff">
     <title>CareApp</title>
     <link rel="apple-touch-icon" href="c3d0666bfcbd9b846f72.png">
-    <style>
-      body {
-        -webkit-touch-callout: none;
-        -webkit-user-select: none;
-        user-select: none;
-        -webkit-tap-highlight-color: transparent;
-        overscroll-behavior: none;
-        position: fixed;
-        width: 100%;
-        height: 100%;
-        margin: 0;
-        padding: 0;
-        overflow: hidden;
-      }
-      
-      .container {
-        height: calc(100vh - 60px);
-        overflow-y: auto;
-        -webkit-overflow-scrolling: touch;
-      }
-      
-      .header {
-        position: fixed;
-        top: 0;
-        width: 100%;
-        background: #fff;
-        z-index: 1000;
-        padding: env(safe-area-inset-top) 0 0 0;
-      }
-    </style>
   <script defer src="main.js"></script></head>
   <body>
     <div class="header">
@@ -77,6 +47,10 @@
       <img src="5cb191d6ff47e6ab6305.png" alt="menu-icon" id="menu-icon" />
     </div>
     <div class="container">
+      <div class="pull-to-refresh">
+        <div class="pull-to-refresh__text">משוך לרענון</div>
+        <div class="pull-to-refresh__spinner"></div>
+      </div>
       <div class="task-list">
        <div class="list-headers">
         <div id="header-item-name">משימה</div>
