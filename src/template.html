@@ -28,6 +28,7 @@
         height: calc(100vh - 60px);
         overflow-y: auto;
         -webkit-overflow-scrolling: touch;
+        position: relative;
       }
       
       .header {
@@ -37,6 +38,43 @@
         background: #fff;
         z-index: 1000;
         padding: env(safe-area-inset-top) 0 0 0;
+      }
+
+      .pull-to-refresh {
+        position: absolute;
+        top: -60px;
+        left: 0;
+        right: 0;
+        height: 60px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: #fff;
+        transition: transform 0.3s ease;
+      }
+
+      .pull-to-refresh__spinner {
+        width: 24px;
+        height: 24px;
+        border: 2px solid #ccc;
+        border-top-color: #007AFF;
+        border-radius: 50%;
+        animation: spin 1s linear infinite;
+        display: none;
+      }
+
+      .pull-to-refresh__text {
+        color: #666;
+        font-size: 14px;
+        margin-right: 8px;
+      }
+
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+
+      .pull-to-refresh.active .pull-to-refresh__spinner {
+        display: block;
       }
     </style>
   </head>
@@ -77,6 +115,10 @@
       <img src="./assets/menu.png" alt="menu-icon" id="menu-icon" />
     </div>
     <div class="container">
+      <div class="pull-to-refresh">
+        <div class="pull-to-refresh__text">משוך לרענון</div>
+        <div class="pull-to-refresh__spinner"></div>
+      </div>
       <div class="task-list">
        <div class="list-headers">
         <div id="header-item-name">משימה</div>
