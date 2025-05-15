@@ -47,6 +47,13 @@ export class UI {
             }
         }
     }
+
+    clearTaskList() {
+        while (this.workItemList.firstChild) {
+            this.workItemList.removeChild(this.workItemList.firstChild)
+        }
+    }
+
     newWorkItem(name, desc) {
         const newWorkItem = document.createElement('div')
         newWorkItem.className = 'work-item'
