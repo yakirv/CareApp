@@ -3,7 +3,6 @@ export class Storage {
         const storedArray = localStorage.getItem('tasksList')
         let listArray = []
         this.addNewProject()
-        // this.calculateDate()
     }
     storageAvailable(type) {
         let storage
@@ -42,15 +41,17 @@ export class Storage {
     }
     storeTasks(taksName, taskDesc, taskhour) {
         if (this.storageAvailable('localStorage')) {
-            this.listArray.push({
+            const storedTasks = localStorage.getItem('tasksList')
+            let tasksArray = JSON.parse(storedTasks)
+            tasksArray.push({
                 name: taksName,
                 desc: taskDesc,
                 id: this.generateRandomId(),
                 hour: taskhour,
                 status: 'waiting',
             })
-            this.listArray = this.sortTasksByDate(this.listArray)
-            const updatedDataString = JSON.stringify(this.listArray)
+            tasksArray = this.sortTasksByDate(tasksArray)
+            const updatedDataString = JSON.stringify(tasksArray)
             localStorage.setItem('tasksList', updatedDataString)
         }
     }
