@@ -47,6 +47,7 @@ export class Storage {
                 desc: taskDesc,
                 id: this.generateRandomId(),
                 hour: taskhour,
+                status: 'waiting',
             })
             this.listArray = this.sortTasksByDate(this.listArray)
             const updatedDataString = JSON.stringify(this.listArray)

@@ -47,7 +47,9 @@ export class UI {
                 this.newWorkItem(
                     storedString[i].name,
                     storedString[i].desc,
-                    storage.calculateDate(storedString[i].hour)
+                    storage.calculateDate(storedString[i].hour),
+                    storedString[i].id,
+                    storedString[i].status
                 )
 
                 eventHandler.statusContainer =
@@ -62,7 +64,7 @@ export class UI {
         }
     }
 
-    newWorkItem(name, desc, hour) {
+    newWorkItem(name, desc, hour, id, status) {
         const newWorkItem = document.createElement('div')
         newWorkItem.className = 'work-item'
         const newItemName = document.createElement('span')
@@ -70,8 +72,12 @@ export class UI {
         newItemName.innerHTML = name
         const newItemStatus = document.createElement('span')
         newItemStatus.id = 'work-item-status'
-        newItemStatus.className = 'waiting'
-        newItemStatus.innerHTML = 'ממתין לביצוע'
+        newItemStatus.className = status
+        if (status === 'waiting') {
+            newItemStatus.innerHTML = 'ממתין לביצוע'
+        } else if (status === 'done') {
+            newItemStatus.innerHTML = 'בוצע'
+        }
         const newItemDesc = document.createElement('span')
         newItemDesc.id = 'new-item-desc'
         newItemDesc.innerHTML = desc
@@ -82,7 +88,7 @@ export class UI {
         newItemAction.id = 'work-item-action'
         newItemAction.innerHTML = 'סמן כבוצע'
         newItemAction.addEventListener('click', () => {
-            eventHandler.changeTaskStatus()
+            eventHandler.changeTaskStatus(id)
         })
 
         eventHandler.statusContainer =

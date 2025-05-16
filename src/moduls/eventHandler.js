@@ -117,12 +117,19 @@ export class EventHandler {
         })
     }
 
-    changeTaskStatus() {
-        console.log('clickckck')
-        if (this.statusContainer) {
-            this.statusContainer.className = 'done'
-            this.statusContainer.innerHTML = 'בוצע'
-            // NEED to add time stamp
-        }
+    changeTaskStatus(id) {
+        const storedArray = localStorage.getItem('tasksList')
+        const taskArray = JSON.parse(storedArray)
+
+        taskArray.forEach((task) => {
+            if (task.id === id) {
+                console.log(`The task id is: ${id}`)
+                task.status = 'done'
+                task.hour = new Date()
+                const updatedDataString = JSON.stringify(taskArray)
+                localStorage.setItem('tasksList', updatedDataString)
+                this.refreshData()
+            }
+        })
     }
 }
