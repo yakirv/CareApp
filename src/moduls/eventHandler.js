@@ -123,12 +123,11 @@ export class EventHandler {
 
         taskArray.forEach((task) => {
             if (task.id === id) {
-                console.log(`The task id is: ${id}`)
                 task.status = 'done'
                 task.hour = new Date()
                 const updatedDataString = JSON.stringify(taskArray)
                 localStorage.setItem('tasksList', updatedDataString)
-                this.refreshData()
+                ui.updateStatusInd(id)
             }
         })
     }

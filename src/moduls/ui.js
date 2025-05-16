@@ -71,7 +71,7 @@ export class UI {
         newItemName.id = 'work-item-name'
         newItemName.innerHTML = name
         const newItemStatus = document.createElement('span')
-        newItemStatus.id = 'work-item-status'
+        newItemStatus.id = `work-item-status_${id}`
         newItemStatus.className = status
         if (status === 'waiting') {
             newItemStatus.innerHTML = 'ממתין לביצוע'
@@ -101,5 +101,16 @@ export class UI {
         newWorkItem.appendChild(newItemAction)
 
         this.workItemList.appendChild(newWorkItem)
+    }
+
+    updateStatusInd(id) {
+        const item = document.getElementById(`work-item-status_${id}`)
+        if (item.className === 'waiting') {
+            item.className = 'done'
+            item.innerHTML = 'בוצע'
+        } else if (item.className === 'done') {
+            item.className = 'waiting'
+            item.innerHTML = 'ממתין לביצוע'
+        }
     }
 }
