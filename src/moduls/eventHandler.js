@@ -13,6 +13,7 @@ export class EventHandler {
     startY
     currentY
     isRefreshing
+    statusContainer
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => {
@@ -24,7 +25,6 @@ export class EventHandler {
             this.startY = 0
             this.currentY = 0
             this.isRefreshing = false
-
             this.clickAddFood()
             this.clickAddSleep()
             this.clickNewTask()
@@ -72,7 +72,7 @@ export class EventHandler {
         })
     }
 
-    async refreshData() {
+    refreshData() {
         try {
             ui.clearTaskList()
             ui.renderTasksList()
@@ -91,26 +91,45 @@ export class EventHandler {
             const formData = new FormData(newTaskForm)
             const taskName = formData.get('new-task-name')
             const taskDesc = formData.get('new-task-description')
+            const hour = new Date()
             const validateName = validations.inputValidation('task-name')
             const validateDesc = validations.inputValidation('task-description')
 
             if (validateName.isvalid && validateDesc.isvalid) {
-                ui.newWorkItem(taskName, taskDesc)
-                storage.storeTasks(taskName, taskDesc)
+                //  ui.newWorkItem(taskName, taskDesc, storage.calculateDate(hour))
+                storage.storeTasks(taskName, taskDesc, hour)
+                this.refreshData()
                 newTaskForm.reset()
             }
         })
     }
+
     clickAddFood() {
         this.addFood.addEventListener('click', () => {
-            ui.newWorkItem('נוטרילון', '200 מ״ל')
-            storage.storeTasks('נוטרילון', '200 מ״ל')
+            storage.storeTasks('נוטרילון', '200 מ״ל', new Date())
+            this.refreshData()
         })
     }
     clickAddSleep() {
         this.addSleep.addEventListener('click', () => {
-            ui.newWorkItem('שינה', 'שעתיים')
-            storage.storeTasks('שינה', 'שעתיים')
+            storage.storeTasks('שינה', 'שעתיים', new Date())
+            this.refreshData()
+        })
+    }
+
+    changeTaskStatus(id) {
+        const storedArray = localStorage.getItem('tasksList')
+        const taskArray = JSON.parse(storedArray)
+
+        taskArray.forEach((task) => {
+            if (task.id === id) {
+                console.log(`The task id is: ${id}`)
+                task.status = 'done'
+                task.hour = new Date()
+                const updatedDataString = JSON.stringify(taskArray)
+                localStorage.setItem('tasksList', updatedDataString)
+                this.refreshData()
+            }
         })
     }
 }
