@@ -282,6 +282,8 @@ input {
         height: 4.5em;
     }
     .work-item span {
+        text-wrap: wrap;
+        text-align: center;
     }
 
     #actions {
@@ -289,9 +291,6 @@ input {
         left: 1.2%;
         top: 105%;
         height: 70vh;
-    }
-    #work-item-status {
-        padding-top: 15px;
     }
 
     #actions button {
