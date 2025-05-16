@@ -1,4 +1,4 @@
-import { storage } from '..'
+import { eventHandler, storage } from '..'
 
 export class UI {
     workItemList
@@ -41,9 +41,17 @@ export class UI {
 
     renderTasksList() {
         const storedString = JSON.parse(localStorage.getItem('tasksList'))
+
         if (storedString) {
             for (let i = 0; i < storedString.length; i++) {
-                this.newWorkItem(storedString[i].name, storedString[i].desc)
+                this.newWorkItem(
+                    storedString[i].name,
+                    storedString[i].desc,
+                    storage.calculateDate(storedString[i].hour)
+                )
+
+                eventHandler.statusContainer =
+                    document.getElementById('work-item-status')
             }
         }
     }
@@ -54,7 +62,7 @@ export class UI {
         }
     }
 
-    newWorkItem(name, desc) {
+    newWorkItem(name, desc, hour) {
         const newWorkItem = document.createElement('div')
         newWorkItem.className = 'work-item'
         const newItemName = document.createElement('span')
@@ -69,10 +77,16 @@ export class UI {
         newItemDesc.innerHTML = desc
         const newItemHour = document.createElement('span')
         newItemHour.id = 'work-item-hour'
-        newItemHour.innerHTML = '-'
+        newItemHour.innerHTML = hour
         const newItemAction = document.createElement('button')
         newItemAction.id = 'work-item-action'
         newItemAction.innerHTML = 'סמן כבוצע'
+        newItemAction.addEventListener('click', () => {
+            eventHandler.changeTaskStatus()
+        })
+
+        eventHandler.statusContainer =
+            document.getElementById('work-item-status')
 
         newWorkItem.appendChild(newItemName)
         newWorkItem.appendChild(newItemStatus)

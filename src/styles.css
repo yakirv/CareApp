@@ -227,7 +227,13 @@ input {
     font-size: 12px;
     border-radius: 10px;
 }
-
+.done {
+    background-color: #74c69d;
+    color: #d8f3dc;
+    padding: 0.8em;
+    font-size: 12px;
+    border-radius: 10px;
+}
 /* Tablet Styles */
 @media screen and (max-width: 1024px) {
     .container {
