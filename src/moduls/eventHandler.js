@@ -123,8 +123,7 @@ export class EventHandler {
         taskArray.forEach((task) => {
             if (task.id === id) {
                 task.status = 'done'
-                //task.hour = new Date()
-                task.hour = storage.calculateDate(new Date())
+                task.hour = new Date()
                 const updatedDataString = JSON.stringify(taskArray)
                 localStorage.setItem('tasksList', updatedDataString)
                 ui.updateStatusInd(id)

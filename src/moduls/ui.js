@@ -44,10 +44,11 @@ export class UI {
 
         if (storedString) {
             for (let i = 0; i < storedString.length; i++) {
+                const taskTime = this.convertHourToString(storedString[i].hour)
                 this.newWorkItem(
                     storedString[i].name,
                     storedString[i].desc,
-                    storage.calculateDate(storedString[i].hour),
+                    taskTime,
                     storedString[i].id,
                     storedString[i].status
                 )
@@ -55,6 +56,27 @@ export class UI {
                 eventHandler.statusContainer =
                     document.getElementById('work-item-status')
             }
+        }
+    }
+    convertHourToString(hour) {
+        const passedTime = storage.calculateTimePassed(hour)
+        switch (passedTime[0]) {
+            case 'days':
+                return `לפני  ${passedTime[1]} ימים`
+                break
+            case 'hours':
+                return `לפני  ${passedTime[1]} שעות`
+                break
+            case 'minutes':
+                return `לפני  ${passedTime[1]} דקות`
+                break
+            case 'seconds':
+                if (passedTime[1] < 1) {
+                    return 'כעת'
+                } else {
+                    return `לפני  ${passedTime[1]} שניות`
+                }
+                break
         }
     }
 
@@ -72,7 +94,9 @@ export class UI {
         newItemName.innerHTML = name
         const newItemStatus = document.createElement('span')
         newItemStatus.id = `work-item-status_${id}`
-        newItemStatus.className = status
+        newItemStatus.classList.add(status)
+        // newItemStatus.className = status
+        newItemStatus.classList.add('status-state')
         if (status === 'waiting') {
             newItemStatus.innerHTML = 'ממתין לביצוע'
         } else if (status === 'done') {
