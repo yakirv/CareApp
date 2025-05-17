@@ -129,11 +129,13 @@ export class UI {
 
     updateStatusInd(id) {
         const item = document.getElementById(`work-item-status_${id}`)
-        if (item.className === 'waiting') {
-            item.className = 'done'
+        if (item.classList.contains('waiting')) {
+            item.classList.add('done')
+            item.classList.add('status-state')
             item.innerHTML = 'בוצע'
-        } else if (item.className === 'done') {
-            item.className = 'waiting'
+        } else if (item.classList.contains('done')) {
+            item.classList.add('waiting')
+            item.classList.add('status-state')
             item.innerHTML = 'ממתין לביצוע'
         }
     }
