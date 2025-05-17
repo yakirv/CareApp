@@ -20,10 +20,15 @@ html {
 }
 
 .container {
-    height: calc(100vh - 60px);
+    /*    height: calc(100vh - 60px);
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
-    position: relative;
+    position: relative; */
+    overflow-y: auto;
+    /* For smooth scrolling behavior */
+    scroll-behavior: smooth;
+    /* If you need to control momentum/bounce effects */
+    overscroll-behavior: auto;
 }
 
 .header {
