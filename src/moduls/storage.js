@@ -41,7 +41,12 @@ export class Storage {
     }
     storeTasks(taksName, taskDesc, taskhour) {
         if (this.storageAvailable('localStorage')) {
-            const storedTasks = localStorage.getItem('tasksList')
+            let storedTasks = localStorage.getItem('tasksList')
+
+            if (storedTasks === null) {
+                localStorage.setItem('tasksList', '[]')
+                storedTasks = localStorage.getItem('tasksList')
+            }
             let tasksArray = JSON.parse(storedTasks)
             tasksArray.push({
                 name: taksName,
@@ -62,7 +67,7 @@ export class Storage {
         return id
     }
 
-    calculateDate(taskDate) {
+    calculateTimePassed(taskDate) {
         const current = new Date()
 
         const diffMs = current - new Date(taskDate)
@@ -73,6 +78,15 @@ export class Storage {
         const days = Math.floor(hours / 24)
 
         if (days > 0) {
+            return ['days', days]
+        } else if (hours > 0) {
+            return ['hours', hours]
+        } else if (minutes > 0) {
+            return ['minutes', minutes]
+        } else {
+            return ['seconds', seconds]
+        }
+        /*    if (days > 0) {
             return ` לפני ${days} ימים `
         } else if (hours > 0) {
             return ` לפני ${hours} שעות `
@@ -82,7 +96,7 @@ export class Storage {
             return ` לפני ${seconds} שניות `
         } else {
             return `כעת`
-        }
+        } */
     }
     sortTasksByDate(
         array = this.listArray,

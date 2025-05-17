@@ -221,12 +221,16 @@ input {
     border: 2px solid white;
     font-weight: 700;
 }
+.waiting.status-state {
+    text-wrap: wrap;
+}
 .waiting {
     background-color: #edd7a0;
     color: #d16d2f;
     padding: 0.7em;
     font-size: 10px;
     border-radius: 10px;
+    text-wrap: wrap;
 }
 .done {
     background-color: #74c69d;
