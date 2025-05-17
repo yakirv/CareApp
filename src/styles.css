@@ -232,7 +232,7 @@ input {
     border-radius: 10px;
     text-wrap: wrap;
 }
-.done {
+.done.status-state {
     background-color: #74c69d;
     color: #d8f3dc;
     padding: 0.8em;
