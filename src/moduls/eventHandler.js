@@ -115,6 +115,17 @@ export class EventHandler {
             this.refreshData()
         })
     }
+    deleteTask(id) {
+        const storedArray = localStorage.getItem('tasksList')
+        const taskArray = JSON.parse(storedArray)
+        const updatedDataString = JSON.stringify(
+            storage.deleteTaskFromStorage(taskArray, id)
+        )
+
+        localStorage.setItem('tasksList', updatedDataString)
+        this.refreshData()
+        console.log(updatedDataString)
+    }
 
     changeTaskStatus(id) {
         const storedArray = localStorage.getItem('tasksList')
@@ -122,11 +133,19 @@ export class EventHandler {
 
         taskArray.forEach((task) => {
             if (task.id === id) {
-                task.status = 'done'
-                task.hour = new Date()
-                const updatedDataString = JSON.stringify(taskArray)
-                localStorage.setItem('tasksList', updatedDataString)
-                ui.updateStatusInd(id)
+                if (task.status === 'waiting') {
+                    task.status = 'done'
+                    task.hour = new Date()
+                    const updatedDataString = JSON.stringify(taskArray)
+                    localStorage.setItem('tasksList', updatedDataString)
+                    ui.updateStatusInd(id)
+                } else {
+                    task.status = 'waiting'
+                    task.hour = new Date()
+                    const updatedDataString = JSON.stringify(taskArray)
+                    localStorage.setItem('tasksList', updatedDataString)
+                    ui.updateStatusInd(id)
+                }
             }
         })
     }

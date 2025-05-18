@@ -1,4 +1,3 @@
-/* Base styles from HTML */
 body {
     -webkit-touch-callout: none;
     -webkit-user-select: none;
@@ -20,14 +19,8 @@ html {
 }
 
 .container {
-    /*    height: calc(100vh - 60px);
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
-    position: relative; */
-    overflow-y: auto;
-    /* For smooth scrolling behavior */
     scroll-behavior: smooth;
-    /* If you need to control momentum/bounce effects */
     overscroll-behavior: auto;
 }
 
@@ -181,11 +174,15 @@ input {
     width: 100%;
     max-width: 1200px;
 }
+.list-headers {
+    justify-content: space-around;
+    gap: 4em;
+}
 .list-headers,
 .work-item {
     background-color: #a2d2ff;
     display: flex;
-    justify-content: space-between;
+    /*  justify-content: space-between; */
     align-items: center;
     width: 100%;
     padding: 1.5em;
@@ -193,31 +190,47 @@ input {
     border-radius: 10px;
     font-weight: 700;
     box-sizing: border-box;
-    gap: 12em;
 }
 
+.list-headers div {
+    max-width: 30px;
+}
 .work-item {
+    justify-content: space-evenly;
+    gap: 7.5em;
     background-color: transparent;
     border: 1px solid black;
     height: 2.6em;
     font-weight: 400;
     padding: 20px;
-    gap: 13em;
 }
 .work-item:hover {
     background-color: #eae8e8;
 }
 .work-item span {
-    width: 30px;
+    max-width: 25px;
     text-wrap: nowrap;
 }
 
 #work-item-status {
     text-wrap: wrap;
-    /*  width: 70px; */
     text-align: center;
 }
 
+#work-item-delete {
+    background-color: transparent;
+    color: #ef233c;
+    border: 1px solid #ef233c;
+    border-radius: 10px;
+    padding: 0.3em 0.7em;
+    cursor: pointer;
+    text-wrap: nowrap;
+}
+#work-item-delete:hover {
+    color: white;
+    border: 2px solid white;
+    font-weight: 700;
+}
 #work-item-action {
     background-color: transparent;
     color: #16db65;
@@ -249,6 +262,11 @@ input {
     padding: 0.8em;
     font-size: 12px;
     border-radius: 10px;
+}
+.actions-buttons {
+    display: flex;
+    gap: 0.4em;
+    margin-left: 50px;
 }
 /* Tablet Styles */
 @media screen and (max-width: 1024px) {
@@ -292,12 +310,16 @@ input {
     input {
         height: 0.5em;
     }
+
     .list-headers,
     .work-item {
         padding: 1em;
         gap: 0.8em;
         font-size: 0.9em;
         height: 4.5em;
+    }
+    .work-item {
+        height: 5.5em;
     }
     .work-item span {
         text-wrap: wrap;
@@ -320,6 +342,20 @@ input {
         padding-right: 1.5em;
     }
     #work-item-action {
+        padding: 0.1em 0.5em;
+        margin-left: -2%;
+        text-wrap: wrap;
+    }
+    .actions-buttons {
+        flex-direction: column;
+        margin-left: 20px;
+        gap: 0.5em;
+    }
+    .actions-buttons button {
+        text-align: center;
+        width: 50px;
+    }
+    #work-item-delete {
         padding: 0.1em 0.5em;
         margin-left: -2%;
     }
