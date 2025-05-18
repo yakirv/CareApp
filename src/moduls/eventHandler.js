@@ -1,4 +1,4 @@
-import { ui } from '..'
+import { eventHandler, ui } from '..'
 import { validations } from '..'
 import { storage } from '..'
 
@@ -139,11 +139,13 @@ export class EventHandler {
                     const updatedDataString = JSON.stringify(taskArray)
                     localStorage.setItem('tasksList', updatedDataString)
                     ui.updateStatusInd(id)
+                    eventHandler.refreshData()
                 } else {
                     task.status = 'waiting'
                     task.hour = new Date()
                     const updatedDataString = JSON.stringify(taskArray)
                     localStorage.setItem('tasksList', updatedDataString)
+                    eventHandler.refreshData()
                     ui.updateStatusInd(id)
                 }
             }
