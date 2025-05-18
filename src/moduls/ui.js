@@ -95,8 +95,9 @@ export class UI {
         const newItemStatus = document.createElement('span')
         newItemStatus.id = `work-item-status_${id}`
         newItemStatus.classList.add(status)
-        // newItemStatus.className = status
+
         newItemStatus.classList.add('status-state')
+        newItemStatus.classList.add('waiting')
         if (status === 'waiting') {
             newItemStatus.innerHTML = 'ממתין לביצוע'
         } else if (status === 'done') {
@@ -110,10 +111,19 @@ export class UI {
         newItemHour.innerHTML = hour
         const actionButtons = document.createElement('span')
         actionButtons.className = 'actions-buttons'
-        const newItemAction = document.createElement('button')
-        newItemAction.id = 'work-item-action'
-        newItemAction.innerHTML = 'סמן כבוצע'
-        newItemAction.addEventListener('click', () => {
+        const statusButton = document.createElement('button')
+        statusButton.id = `change-to-done`
+        statusButton.ariaLabel = id
+        statusButton.classList.add(`status-button`)
+        if (status === 'waiting') {
+            statusButton.classList.add(`change-to-done`)
+            statusButton.innerHTML = 'סמן כבוצע'
+        } else {
+            statusButton.classList.add(`change-to-waiting`)
+            statusButton.innerHTML = 'שנה סטטוס'
+        }
+
+        statusButton.addEventListener('click', () => {
             eventHandler.changeTaskStatus(id)
         })
         const deleteButton = document.createElement('button')
@@ -126,7 +136,7 @@ export class UI {
         eventHandler.statusContainer =
             document.getElementById('work-item-status')
 
-        actionButtons.appendChild(newItemAction)
+        actionButtons.appendChild(statusButton)
         actionButtons.appendChild(deleteButton)
         newWorkItem.appendChild(newItemName)
         newWorkItem.appendChild(newItemStatus)
@@ -134,22 +144,27 @@ export class UI {
         newWorkItem.appendChild(newItemHour)
         newWorkItem.appendChild(actionButtons)
 
-        /*  newWorkItem.appendChild(newItemAction)
-        newWorkItem.appendChild(deleteButton) */
-
         this.workItemList.appendChild(newWorkItem)
     }
 
     updateStatusInd(id) {
-        const item = document.getElementById(`work-item-status_${id}`)
-        if (item.classList.contains('waiting')) {
-            item.classList.add('done')
-            item.classList.add('status-state')
-            item.innerHTML = 'בוצע'
-        } else if (item.classList.contains('done')) {
-            item.classList.add('waiting')
-            item.classList.add('status-state')
-            item.innerHTML = 'ממתין לביצוע'
-        }
+        const items = Array.from(
+            document.getElementsByClassName(`status-button`)
+        )
+        items.forEach((item) => {
+            if (
+                item.classList.contains('change-to-done') &&
+                item.ariaLabel === id
+            ) {
+                item.classList.add('change-to-waiting')
+                item.classList.remove('change-to-done')
+            } else if (
+                item.classList.contains('change-to-waiting') &&
+                item.ariaLabel === id
+            ) {
+                item.classList.add('change-to-done')
+                item.classList.remove('change-to-waiting')
+            }
+        })
     }
 }
