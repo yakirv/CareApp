@@ -4,12 +4,18 @@ export class UI {
     workItemList
     menuIcon
     actions
+    emptyMessage
+    listHeader
+    container
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => {
             this.workItemList = document.querySelector('.work-item-list')
             this.menuIcon = document.getElementById('menu-icon')
             this.actions = document.getElementById('actions')
+            this.emptyMessage = document.getElementById('empty-list')
+            this.listHeader = document.getElementById('list-headers')
+            this.container = document.querySelector('.container')
             this.initializeMenu()
             this.renderTasksList()
         })
@@ -43,6 +49,10 @@ export class UI {
         const storedString = JSON.parse(localStorage.getItem('tasksList'))
 
         if (storedString) {
+            this.emptyMessage.style.display = 'none'
+            this.listHeader.style.display = 'flex'
+            this.container.style.display = 'flex'
+
             for (let i = 0; i < storedString.length; i++) {
                 const taskTime = this.convertHourToString(storedString[i].hour)
                 this.newWorkItem(
@@ -56,6 +66,11 @@ export class UI {
                 eventHandler.statusContainer =
                     document.getElementById('work-item-status')
             }
+        } else {
+            this.emptyMessage.style.display = 'block'
+            this.listHeader.style.display = 'none'
+            this.container.style.display = 'block'
+            this.container.style.textAlign = 'center'
         }
     }
     convertHourToString(hour) {

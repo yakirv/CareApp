@@ -169,16 +169,22 @@ input {
     padding: 1rem;
     box-sizing: border-box;
 }
+#empty-list {
+    color: #ffafcc;
+    font-size: 95px;
+    margin: 10% 0;
+    display: block;
+}
 .task-list {
     margin-top: 1em;
     width: 100%;
     max-width: 1200px;
 }
-.list-headers {
+#list-headers {
     justify-content: space-around;
     gap: 4em;
 }
-.list-headers,
+#list-headers,
 .work-item {
     background-color: #a2d2ff;
     display: flex;
@@ -192,7 +198,7 @@ input {
     box-sizing: border-box;
 }
 
-.list-headers div {
+#list-headers div {
     max-width: 30px;
 }
 .work-item {
@@ -291,7 +297,7 @@ input {
         padding: 0.5rem;
     }
 
-    .list-headers,
+    #list-headers,
     .work-item {
         padding: 1.2em;
         gap: 1em;
@@ -328,7 +334,7 @@ input {
         height: 0.5em;
     }
 
-    .list-headers,
+    #list-headers,
     .work-item {
         padding: 1em;
         gap: 0.8em;
@@ -385,6 +391,12 @@ input {
         margin-top: 0.5em;
     }
 }
+#empty-list {
+    color: #ffafcc;
+    font-size: 45px;
+    margin: 50% 0;
+    display: block;
+}
 
 /* Small Mobile Styles */
 @media screen and (max-width: 480px) {
@@ -392,7 +404,7 @@ input {
         padding: 0.3rem;
     }
 
-    .list-headers,
+    #list-headers,
     .work-item {
         padding: 0.8em;
         gap: 0.5em;
@@ -433,7 +445,7 @@ input {
         margin-top: 0.3em;
     }
 
-    .list-headers,
+    #list-headers,
     .work-item {
         padding: 0.5em;
         margin: 0.3em 0;
