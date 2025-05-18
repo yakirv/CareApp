@@ -86,17 +86,9 @@ export class Storage {
         } else {
             return ['seconds', seconds]
         }
-        /*    if (days > 0) {
-            return ` לפני ${days} ימים `
-        } else if (hours > 0) {
-            return ` לפני ${hours} שעות `
-        } else if (minutes > 0) {
-            return ` לפני ${minutes} דקות `
-        } else if (seconds > 1) {
-            return ` לפני ${seconds} שניות `
-        } else {
-            return `כעת`
-        } */
+    }
+    deleteTaskFromStorage(arr, idToRemove) {
+        return arr.filter((obj) => obj.id !== idToRemove)
     }
     sortTasksByDate(
         array = this.listArray,

@@ -108,21 +108,34 @@ export class UI {
         const newItemHour = document.createElement('span')
         newItemHour.id = 'work-item-hour'
         newItemHour.innerHTML = hour
+        const actionButtons = document.createElement('span')
+        actionButtons.className = 'actions-buttons'
         const newItemAction = document.createElement('button')
         newItemAction.id = 'work-item-action'
         newItemAction.innerHTML = 'סמן כבוצע'
         newItemAction.addEventListener('click', () => {
             eventHandler.changeTaskStatus(id)
         })
-
+        const deleteButton = document.createElement('button')
+        deleteButton.id = 'work-item-delete'
+        deleteButton.innerHTML = 'מחיקה'
+        deleteButton.addEventListener('click', () => {
+            console.log('delete')
+            eventHandler.deleteTask(id)
+        })
         eventHandler.statusContainer =
             document.getElementById('work-item-status')
 
+        actionButtons.appendChild(newItemAction)
+        actionButtons.appendChild(deleteButton)
         newWorkItem.appendChild(newItemName)
         newWorkItem.appendChild(newItemStatus)
         newWorkItem.appendChild(newItemDesc)
         newWorkItem.appendChild(newItemHour)
-        newWorkItem.appendChild(newItemAction)
+        newWorkItem.appendChild(actionButtons)
+
+        /*  newWorkItem.appendChild(newItemAction)
+        newWorkItem.appendChild(deleteButton) */
 
         this.workItemList.appendChild(newWorkItem)
     }
