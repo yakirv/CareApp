@@ -124,7 +124,6 @@ export class EventHandler {
 
         localStorage.setItem('tasksList', updatedDataString)
         this.refreshData()
-        console.log(updatedDataString)
     }
 
     changeTaskStatus(id) {
@@ -138,7 +137,6 @@ export class EventHandler {
                     task.hour = new Date()
                     const updatedDataString = JSON.stringify(taskArray)
                     localStorage.setItem('tasksList', updatedDataString)
-                    ui.updateStatusInd(id)
                     eventHandler.refreshData()
                 } else {
                     task.status = 'waiting'
@@ -146,9 +144,226 @@ export class EventHandler {
                     const updatedDataString = JSON.stringify(taskArray)
                     localStorage.setItem('tasksList', updatedDataString)
                     eventHandler.refreshData()
-                    ui.updateStatusInd(id)
                 }
             }
         })
+    }
+
+    enterEditMode(paragraph, editActions, editIcon) {
+        if (!paragraph || !editActions) {
+            console.error('Missing required elements for edit mode')
+            return
+        }
+
+        paragraph.contentEditable = 'true'
+        paragraph.classList.add('editing')
+
+        // Safely handle aria-label
+        const currentAriaLabel = paragraph.getAttribute('aria-label') || ''
+        if (!currentAriaLabel.includes('(editing)')) {
+            paragraph.setAttribute(
+                'aria-label',
+                `${currentAriaLabel} (editing)`
+            )
+        }
+
+        // Focus and set cursor at the end
+        paragraph.focus()
+
+        // Place cursor at end of text
+        const selection = window.getSelection()
+        const range = document.createRange()
+
+        // Make sure the paragraph has content to select
+        if (paragraph.childNodes.length > 0) {
+            const lastChild =
+                paragraph.childNodes[paragraph.childNodes.length - 1]
+            range.setStart(lastChild, lastChild.length || 0)
+            range.collapse(true)
+            selection.removeAllRanges()
+            selection.addRange(range)
+        }
+        editActions.style.display = 'flex'
+        // Update UI - hide edit icon and show edit actions
+        if (editIcon) {
+            editIcon.style.display = 'none'
+        } else {
+            // If editIcon not provided, find it as a sibling
+            const parentContainer = paragraph.parentElement
+            if (parentContainer) {
+                const editIconElement =
+                    parentContainer.querySelector('.edit-icon')
+                if (editIconElement) {
+                    editIconElement.style.display = 'none'
+                }
+            }
+        }
+    }
+
+    exitEditMode(save, paragraph, editActions, name, id, editIcon) {
+        if (!paragraph || !editActions) {
+            console.error('Missing required elements for exiting edit mode')
+            return
+        }
+
+        // Handle content restoration if not saving
+        if (!save) {
+            paragraph.textContent = name // Use textContent instead of innerHTML for safety
+        }
+
+        // Only proceed if there's valid content
+        if (paragraph.textContent.trim().length > 0) {
+            // Save changes if needed
+            if (save && id) {
+                storage.editTaskName(id, paragraph.textContent.trim())
+            }
+
+            // Reset paragraph state
+            paragraph.contentEditable = 'false'
+            paragraph.classList.remove('editing')
+
+            // Safely handle aria-label
+            const currentAriaLabel = paragraph.getAttribute('aria-label') || ''
+            paragraph.setAttribute(
+                'aria-label',
+                currentAriaLabel.replace(' (editing)', '')
+            )
+            editActions.style.display = 'none'
+            // The edit icon should be managed by mouseover/mouseout events, not hidden permanently
+            if (editIcon) {
+                // Initially hide it, mouseover will show it again when needed
+                editIcon.style.display = 'none'
+            }
+        } else {
+            // Handle empty content case
+            console.warn('Cannot save empty task name')
+            paragraph.textContent = name // Restore original name
+        }
+    }
+    attachEventListeners(
+        itemName,
+        actionsContainer,
+        editIcon,
+        originalName,
+        id
+    ) {
+        // Item name click - enter edit mode
+        itemName.addEventListener('click', () => {
+            eventHandler.enterEditMode(itemName, actionsContainer, editIcon)
+        })
+
+        // Mouse out - hide edit icon
+        itemName.addEventListener('mouseout', () => {
+            editIcon.style.display = 'none'
+        })
+
+        // Mouse over - show edit icon
+        itemName.addEventListener('mouseover', () => {
+            if (itemName.contentEditable !== 'true') {
+                // Find the edit icon (now a sibling of itemName)
+                const parentContainer = itemName.parentElement
+                if (parentContainer) {
+                    const editIconElement =
+                        parentContainer.querySelector('.edit-icon')
+                    if (editIconElement) {
+                        editIconElement.style.display = 'inline'
+                    }
+                }
+            }
+        })
+        itemName.addEventListener('blur', (e) => {
+            // Check if the click was inside the actions container to prevent conflicts
+            // with save/cancel button clicks
+            const isClickInsideActions =
+                e.relatedTarget &&
+                (actionsContainer.contains(e.relatedTarget) ||
+                    actionsContainer === e.relatedTarget)
+
+            if (itemName.contentEditable === 'true' && !isClickInsideActions) {
+                // Only trigger cancel if we're not clicking on the actions buttons
+                eventHandler.exitEditMode(
+                    false,
+                    itemName,
+                    actionsContainer,
+                    originalName,
+                    id,
+                    editIcon
+                )
+            }
+        })
+        // Keyboard shortcuts for editing
+        itemName.addEventListener('keydown', (e) => {
+            if (itemName.contentEditable === 'true') {
+                if (e.key === 'Escape') {
+                    eventHandler.exitEditMode(
+                        false,
+                        itemName,
+                        actionsContainer,
+                        originalName,
+                        id,
+                        editIcon
+                    )
+                    e.preventDefault()
+                } else if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) {
+                    eventHandler.exitEditMode(
+                        true,
+                        itemName,
+                        actionsContainer,
+                        itemName.textContent,
+                        id,
+                        editIcon
+                    )
+                    e.preventDefault()
+                }
+            }
+        })
+
+        // Save and cancel buttons
+        const saveButton = actionsContainer.querySelector('.save-button')
+        if (saveButton) {
+            saveButton.addEventListener('click', () => {
+                eventHandler.exitEditMode(
+                    true,
+                    itemName,
+                    actionsContainer,
+                    itemName.textContent,
+                    id,
+                    editIcon
+                )
+            })
+        }
+
+        const cancelButton = actionsContainer.querySelector('.cancel-button')
+        if (cancelButton) {
+            cancelButton.addEventListener('click', () => {
+                eventHandler.exitEditMode(
+                    false,
+                    itemName,
+                    actionsContainer,
+                    originalName,
+                    id,
+                    editIcon
+                )
+            })
+        }
+
+        // Status change and delete buttons
+        const statusButton = document.querySelector(
+            `[aria-label="${id}"].status-button`
+        )
+        if (statusButton) {
+            statusButton.addEventListener('click', () => {
+                eventHandler.changeTaskStatus(id)
+            })
+        }
+
+        const deleteButton = document.querySelector(
+            `#work-item-delete[data-task-id="${id}"]`
+        )
+        if (deleteButton) {
+            deleteButton.addEventListener('click', () => {
+                eventHandler.deleteTask(id)
+            })
+        }
     }
 }
