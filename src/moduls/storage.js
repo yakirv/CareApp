@@ -106,4 +106,15 @@ export class Storage {
             }
         })
     }
+
+    editTaskName(id, name) {
+        const taskArray = JSON.parse(this.storedArray)
+        taskArray.forEach((task) => {
+            if (task.id === id) {
+                task.name = name
+                const updatedDataString = JSON.stringify(taskArray)
+                localStorage.setItem('tasksList', updatedDataString)
+            }
+        })
+    }
 }

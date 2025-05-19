@@ -1,4 +1,5 @@
 import { eventHandler, storage } from '..'
+import editIcon from '../assets/edit_icon.png'
 
 export class UI {
     workItemList
@@ -16,10 +17,12 @@ export class UI {
             this.emptyMessage = document.getElementById('empty-list')
             this.listHeader = document.getElementById('list-headers')
             this.container = document.querySelector('.container')
+
             this.initializeMenu()
             this.renderTasksList()
         })
     }
+
     initializeMenu() {
         this.openMenu()
         this.closeMenu()
@@ -102,84 +105,161 @@ export class UI {
     }
 
     newWorkItem(name, desc, hour, id, status) {
-        const newWorkItem = document.createElement('div')
-        newWorkItem.className = 'work-item'
-        const newItemName = document.createElement('span')
-        newItemName.id = 'work-item-name'
-        newItemName.innerHTML = name
-        const newItemStatus = document.createElement('span')
-        newItemStatus.id = `work-item-status_${id}`
-        newItemStatus.classList.add(status)
+        // Create main components
+        const newWorkItem = this.createElementWithClass('div', 'work-item')
+        const { itemNameContainer, newItemName, actionsContainer, edit } =
+            this.createNameSection(name, id)
+        const newItemStatus = this.createStatusElement(id, status)
+        const newItemDesc = this.createDescriptionElement(desc)
+        const newItemHour = this.createHourElement(hour)
+        const actionButtons = this.createActionButtons(id, status)
 
-        newItemStatus.classList.add('status-state')
-        newItemStatus.classList.add('waiting')
-        if (status === 'waiting') {
-            newItemStatus.innerHTML = 'ממתין לביצוע'
-        } else if (status === 'done') {
-            newItemStatus.innerHTML = 'בוצע'
-        }
-        const newItemDesc = document.createElement('span')
-        newItemDesc.id = 'new-item-desc'
-        newItemDesc.innerHTML = desc
-        const newItemHour = document.createElement('span')
-        newItemHour.id = 'work-item-hour'
-        newItemHour.innerHTML = hour
-        const actionButtons = document.createElement('span')
-        actionButtons.className = 'actions-buttons'
-        const statusButton = document.createElement('button')
-        statusButton.id = `change-to-done`
-        statusButton.ariaLabel = id
-        statusButton.classList.add(`status-button`)
-        if (status === 'waiting') {
-            statusButton.classList.add(`change-to-done`)
-            statusButton.innerHTML = 'סמן כבוצע'
-        } else {
-            statusButton.classList.add(`change-to-waiting`)
-            statusButton.innerHTML = 'שנה סטטוס'
-        }
-
-        statusButton.addEventListener('click', () => {
-            eventHandler.changeTaskStatus(id)
-        })
-        const deleteButton = document.createElement('button')
-        deleteButton.id = 'work-item-delete'
-        deleteButton.innerHTML = 'מחיקה'
-        deleteButton.addEventListener('click', () => {
-            console.log('delete')
-            eventHandler.deleteTask(id)
-        })
-        eventHandler.statusContainer =
-            document.getElementById('work-item-status')
-
-        actionButtons.appendChild(statusButton)
-        actionButtons.appendChild(deleteButton)
-        newWorkItem.appendChild(newItemName)
+        // Assemble components
+        newWorkItem.appendChild(itemNameContainer)
         newWorkItem.appendChild(newItemStatus)
         newWorkItem.appendChild(newItemDesc)
         newWorkItem.appendChild(newItemHour)
         newWorkItem.appendChild(actionButtons)
 
+        // Add to DOM
         this.workItemList.appendChild(newWorkItem)
+
+        // Add event listeners separately after DOM creation
+        eventHandler.attachEventListeners(
+            newItemName,
+            actionsContainer,
+            edit,
+            name,
+            id
+        )
+
+        return newWorkItem
     }
 
-    updateStatusInd(id) {
-        const items = Array.from(
-            document.getElementsByClassName(`status-button`)
+    // Helper functions for creating elements
+    createElementWithClass(tagName, className) {
+        const element = document.createElement(tagName)
+        if (className) element.className = className
+        return element
+    }
+
+    createNameSection(name, id) {
+        const itemNameContainer = this.createElementWithClass(
+            'div',
+            'task-name-container'
         )
-        items.forEach((item) => {
-            if (
-                item.classList.contains('change-to-done') &&
-                item.ariaLabel === id
-            ) {
-                item.classList.add('change-to-waiting')
-                item.classList.remove('change-to-done')
-            } else if (
-                item.classList.contains('change-to-waiting') &&
-                item.ariaLabel === id
-            ) {
-                item.classList.add('change-to-done')
-                item.classList.remove('change-to-waiting')
-            }
-        })
+
+        // Create editable paragraph
+        const newItemName = this.createElementWithClass('p', 'editable-para')
+        newItemName.id = 'work-item-name'
+        newItemName.textContent = name
+        newItemName.setAttribute('aria-label', 'item-name')
+
+        // Create edit icon
+        const edit = document.createElement('img')
+        edit.src = editIcon
+        edit.style.display = 'none'
+        edit.className = 'edit-icon'
+        itemNameContainer.appendChild(edit)
+
+        // Create edit actions container
+        const actionsContainer = this.createElementWithClass(
+            'div',
+            'edit-actions'
+        )
+        actionsContainer.appendChild(
+            this.createSaveButton(newItemName, actionsContainer, id, edit)
+        )
+        actionsContainer.appendChild(
+            this.createCancelButton(
+                newItemName,
+                actionsContainer,
+                name,
+                id,
+                edit
+            )
+        )
+
+        // Assemble
+        itemNameContainer.appendChild(newItemName)
+        itemNameContainer.appendChild(actionsContainer)
+
+        return { itemNameContainer, newItemName, actionsContainer, edit }
+    }
+
+    createSaveButton(itemName, actionsContainer, id, edit) {
+        const saveButton = this.createElementWithClass('button', 'save-button')
+        saveButton.setAttribute('aria-label', 'save task name')
+        saveButton.textContent = 'שמור'
+        saveButton.dataset.taskId = id
+        return saveButton
+    }
+
+    createCancelButton(itemName, actionsContainer, name, id, edit) {
+        const cancelButton = this.createElementWithClass(
+            'button',
+            'cancel-button'
+        )
+        cancelButton.setAttribute('aria-label', 'cancel task name')
+        cancelButton.textContent = 'ביטול'
+        cancelButton.dataset.taskId = id
+        cancelButton.dataset.originalName = name
+        return cancelButton
+    }
+
+    createStatusElement(id, status) {
+        const statusElement = this.createElementWithClass(
+            'span',
+            `status-state ${status}`
+        )
+        statusElement.id = `work-item-status_${id}`
+
+        statusElement.textContent =
+            status === 'waiting' ? 'ממתין לביצוע' : 'בוצע'
+        return statusElement
+    }
+
+    createDescriptionElement(desc) {
+        const descElement = this.createElementWithClass('span', '')
+        descElement.id = 'new-item-desc'
+        descElement.textContent = desc
+        return descElement
+    }
+
+    createHourElement(hour) {
+        const hourElement = this.createElementWithClass('span', '')
+        hourElement.id = 'work-item-hour'
+        hourElement.textContent = hour
+        return hourElement
+    }
+
+    createActionButtons(id, status) {
+        const actionButtons = this.createElementWithClass(
+            'span',
+            'actions-buttons'
+        )
+
+        // Status button
+        const statusButton = this.createElementWithClass(
+            'button',
+            `status-button ${status === 'waiting' ? 'change-to-done' : 'change-to-waiting'}`
+        )
+        statusButton.id = 'change-to-done'
+        statusButton.setAttribute('aria-label', id)
+        statusButton.textContent =
+            status === 'waiting' ? 'סמן כבוצע' : 'שנה סטטוס'
+        statusButton.dataset.taskId = id
+
+        // Delete button
+        const deleteButton = this.createElementWithClass('button', '')
+        deleteButton.id = 'work-item-delete'
+        deleteButton.textContent = 'מחיקה'
+        deleteButton.dataset.taskId = id
+
+        // Assemble
+        actionButtons.appendChild(statusButton)
+        actionButtons.appendChild(deleteButton)
+
+        return actionButtons
     }
 }
