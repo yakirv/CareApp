@@ -170,15 +170,6 @@ export class UI {
         actionsContainer.appendChild(
             this.createSaveButton(newItemName, actionsContainer, id, edit)
         )
-        actionsContainer.appendChild(
-            this.createCancelButton(
-                newItemName,
-                actionsContainer,
-                name,
-                id,
-                edit
-            )
-        )
 
         // Assemble
         itemNameContainer.appendChild(newItemName)
