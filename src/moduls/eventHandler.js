@@ -212,7 +212,7 @@ export class EventHandler {
         }
     }
 
-    exitEditMode(save, paragraph, editActions, name, id, editIcon) {
+    exitEditMode(save, paragraph, editActions, origName, id, editIcon) {
         if (!paragraph || !editActions) {
             console.error('Missing required elements for exiting edit mode')
             return
@@ -220,14 +220,26 @@ export class EventHandler {
 
         // Handle content restoration if not saving
         if (!save) {
-            paragraph.textContent = name // Use textContent instead of innerHTML for safety
+            paragraph.textContent = origName // Use textContent instead of innerHTML for safety
         }
 
         // Only proceed if there's valid content
         if (paragraph.textContent.trim().length > 0) {
             // Save changes if needed
             if (save && id) {
-                storage.editTaskName(id, paragraph.textContent.trim())
+                if (paragraph.id === 'work-item-name') {
+                    storage.editTaskName(
+                        id,
+                        paragraph.textContent.trim(),
+                        'taskName'
+                    )
+                } else if (paragraph.id === 'work-item-description') {
+                    storage.editTaskName(
+                        id,
+                        paragraph.textContent.trim(),
+                        'descName'
+                    )
+                }
             }
 
             // Reset paragraph state
@@ -249,7 +261,7 @@ export class EventHandler {
         } else {
             // Handle empty content case
             console.warn('Cannot save empty task name')
-            paragraph.textContent = name // Restore original name
+            paragraph.textContent = origName // Restore original name
         }
     }
     attachEventListeners(
@@ -325,7 +337,6 @@ export class EventHandler {
                         true,
                         itemName,
                         actionsContainer,
-                        itemName.textContent,
                         id,
                         editIcon
                     )
@@ -338,11 +349,12 @@ export class EventHandler {
         const saveButton = actionsContainer.querySelector('.save-button')
         if (saveButton) {
             saveButton.addEventListener('click', () => {
+                console.log('Save button clicked')
                 eventHandler.exitEditMode(
                     true,
                     itemName,
                     actionsContainer,
-                    itemName.textContent,
+                    originalName,
                     id,
                     editIcon
                 )
@@ -351,10 +363,15 @@ export class EventHandler {
 
         // Status change and delete buttons
         const statusButton = document.querySelector(
-            `[aria-label="${id}"].status-button`
+            `button[aria-label="${id}"].status-button`
         )
         if (statusButton) {
-            statusButton.addEventListener('click', () => {
+            // Remove any existing click listeners
+            statusButton.replaceWith(statusButton.cloneNode(true))
+            const newStatusButton = document.querySelector(
+                `button[aria-label="${id}"].status-button`
+            )
+            newStatusButton.addEventListener('click', () => {
                 eventHandler.changeTaskStatus(id)
             })
         }

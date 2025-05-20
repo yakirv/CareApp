@@ -1,3 +1,4 @@
+import { de } from 'date-fns/locale'
 import { eventHandler, storage } from '..'
 import editIcon from '../assets/edit_icon.png'
 
@@ -109,15 +110,25 @@ export class UI {
         const newWorkItem = this.createElementWithClass('div', 'work-item')
         const { itemNameContainer, newItemName, actionsContainer, edit } =
             this.createNameSection(name, id)
+
+        const {
+            itemDescContainer,
+            newItemDesc,
+            editActionsContainer,
+            editDescription,
+        } = this.createDescriptionSection(desc, id)
+
         const newItemStatus = this.createStatusElement(id, status)
-        const newItemDesc = this.createDescriptionElement(desc)
+        // const newItemDesc = this.createDescriptionElement(desc)
         const newItemHour = this.createHourElement(hour)
         const actionButtons = this.createActionButtons(id, status)
 
         // Assemble components
         newWorkItem.appendChild(itemNameContainer)
+
         newWorkItem.appendChild(newItemStatus)
-        newWorkItem.appendChild(newItemDesc)
+        newWorkItem.appendChild(itemDescContainer)
+        //newWorkItem.appendChild(newItemDesc)
         newWorkItem.appendChild(newItemHour)
         newWorkItem.appendChild(actionButtons)
 
@@ -130,6 +141,14 @@ export class UI {
             actionsContainer,
             edit,
             name,
+            id
+        )
+
+        eventHandler.attachEventListeners(
+            newItemDesc,
+            editActionsContainer,
+            editDescription,
+            desc.innerHtml,
             id
         )
 
@@ -186,7 +205,7 @@ export class UI {
         return saveButton
     }
 
-    createCancelButton(itemName, actionsContainer, name, id, edit) {
+    /*    createCancelButton(itemName, actionsContainer, name, id, edit) {
         const cancelButton = this.createElementWithClass(
             'button',
             'cancel-button'
@@ -196,7 +215,7 @@ export class UI {
         cancelButton.dataset.taskId = id
         cancelButton.dataset.originalName = name
         return cancelButton
-    }
+    } */
 
     createStatusElement(id, status) {
         const statusElement = this.createElementWithClass(
@@ -252,5 +271,77 @@ export class UI {
         actionButtons.appendChild(deleteButton)
 
         return actionButtons
+    }
+
+    //////////////////////////////////
+    createDescriptionSection(description, id) {
+        const itemDescContainer = this.createElementWithClass(
+            'div',
+            'task-description-container'
+        )
+
+        // Create editable paragraph
+        const newItemDesc = this.createElementWithClass('p', 'editable-para')
+        newItemDesc.id = 'work-item-description'
+        newItemDesc.textContent = description
+        newItemDesc.setAttribute('aria-label', 'item-description')
+
+        // Create edit icon
+        const editDescription = document.createElement('img')
+        editDescription.src = editIcon
+        editDescription.style.display = 'none'
+        editDescription.className = 'edit-icon'
+        itemDescContainer.appendChild(editDescription)
+
+        // Create edit actions container
+        const editActionsContainer = this.createElementWithClass(
+            'div',
+            'edit-actions'
+        )
+        editActionsContainer.appendChild(
+            this.createSaveDescriptionButton(
+                newItemDesc,
+                editActionsContainer,
+                id,
+                editDescription
+            )
+        )
+
+        // Assemble
+        itemDescContainer.appendChild(newItemDesc)
+        itemDescContainer.appendChild(editActionsContainer)
+
+        return {
+            itemDescContainer,
+            newItemDesc,
+            editActionsContainer,
+            editDescription,
+        }
+    }
+
+    createSaveDescriptionButton(itemDesc, actionsContainer, id, edit) {
+        const saveButton = this.createElementWithClass('button', 'save-button')
+        saveButton.setAttribute('aria-label', 'save task description')
+        saveButton.textContent = 'שמור'
+        saveButton.dataset.taskId = id
+        return saveButton
+    }
+
+    createCancelDescriptionButton(
+        itemDesc,
+        actionsContainer,
+        description,
+        id,
+        edit
+    ) {
+        const cancelButton = this.createElementWithClass(
+            'button',
+            'cancel-button'
+        )
+        cancelButton.setAttribute('aria-label', 'cancel task description')
+        cancelButton.textContent = 'ביטול'
+        cancelButton.dataset.taskId = id
+        cancelButton.dataset.originalDescription = description
+        return cancelButton
     }
 }

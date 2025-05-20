@@ -55,9 +55,11 @@ html {
     animation: spin 1s linear infinite;
     display: none;
 }
-.task-name-container {
+.task-name-container,
+.task-description-container {
     position: relative;
     max-width: 30px;
+    width: 30px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -385,7 +387,8 @@ input {
 
 /* Mobile Styles */
 @media screen and (max-width: 768px) {
-    .task-name-container {
+    .task-name-container,
+    .task-description-container {
         position: relative;
         flex-direction: column;
         max-width: 30px;
