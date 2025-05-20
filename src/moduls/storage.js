@@ -107,11 +107,17 @@ export class Storage {
         })
     }
 
-    editTaskName(id, name) {
+    editTaskName(id, name, key) {
         const taskArray = JSON.parse(this.storedArray)
         taskArray.forEach((task) => {
             if (task.id === id) {
-                task.name = name
+                if (key === 'taskName') {
+                    task.name = name
+                }
+                if (key === 'descName') {
+                    task.desc = name
+                }
+
                 const updatedDataString = JSON.stringify(taskArray)
                 localStorage.setItem('tasksList', updatedDataString)
             }
