@@ -35,7 +35,7 @@ html {
 
 .pull-to-refresh {
     position: absolute;
-    top: -60px;
+    top: 205px;
     left: 0;
     right: 0;
     height: 60px;
@@ -76,7 +76,7 @@ html {
 }
 .editing {
     padding: 0.2em 0.3em;
-    background-color: #ffafcc;
+    background-color: #bdd4d8;
     border: 1px solid black;
     max-width: 5em;
     text-wrap: nowrap;
