@@ -35,7 +35,7 @@ html {
 
 .pull-to-refresh {
     position: absolute;
-    top: 198px;
+    top: 0;
     left: 0;
     right: 0;
     height: 60px;
@@ -390,6 +390,10 @@ input {
         flex-direction: column;
         max-width: 30px;
         gap: 0;
+    }
+    .pull-to-refresh {
+        position: absolute;
+        top: 198px;
     }
     #new-task-form {
         display: flex;
