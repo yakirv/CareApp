@@ -59,10 +59,16 @@ html {
     position: relative;
     max-width: 30px;
     display: flex;
+    flex-direction: row;
     align-items: center;
     gap: 20px;
 }
 
+.edit-icon {
+    position: relative;
+    right: 10%;
+    top: 26%;
+}
 .editable-para {
     padding: 8px 10px;
     border-radius: 4px;
@@ -75,6 +81,7 @@ html {
     max-width: 5em;
     text-wrap: nowrap;
     text-overflow: hidden;
+    margin: 5px 0;
 }
 .edit-button {
     opacity: 0;
@@ -378,6 +385,12 @@ input {
 
 /* Mobile Styles */
 @media screen and (max-width: 768px) {
+    .task-name-container {
+        position: relative;
+        flex-direction: column;
+        max-width: 30px;
+        gap: 0;
+    }
     #new-task-form {
         display: flex;
         gap: 1em;
@@ -462,6 +475,11 @@ input {
     display: block;
 }
 
+.editable-para {
+    margin-bottom: 5px;
+    border-radius: 4px;
+    min-height: 1.6em;
+}
 /* Small Mobile Styles */
 @media screen and (max-width: 480px) {
     .header {

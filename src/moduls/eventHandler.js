@@ -35,7 +35,19 @@ export class EventHandler {
             validations.focus_inputValidate('task-description')
         })
     }
+    deviceSupportsHover() {
+        // Primary check using media query
+        if (window.matchMedia('(hover: hover)').matches) {
+            return true
+        }
 
+        // Fallback detection for older browsers
+        return !(
+            'ontouchstart' in window ||
+            navigator.maxTouchPoints > 0 ||
+            navigator.msMaxTouchPoints > 0
+        )
+    }
     initPullToRefresh() {
         this.container.addEventListener('touchstart', (e) => {
             if (this.container.scrollTop === 0) {
@@ -258,19 +270,23 @@ export class EventHandler {
         })
 
         // Mouse over - show edit icon
-        itemName.addEventListener('mouseover', () => {
-            if (itemName.contentEditable !== 'true') {
-                // Find the edit icon (now a sibling of itemName)
-                const parentContainer = itemName.parentElement
-                if (parentContainer) {
-                    const editIconElement =
-                        parentContainer.querySelector('.edit-icon')
-                    if (editIconElement) {
-                        editIconElement.style.display = 'inline'
+        if (this.deviceSupportsHover()) {
+            // Mouse over - show edit icon
+            itemName.addEventListener('mouseover', () => {
+                if (itemName.contentEditable !== 'true') {
+                    // Find the edit icon (now a sibling of itemName)
+                    const parentContainer = itemName.parentElement
+                    if (parentContainer) {
+                        const editIconElement =
+                            parentContainer.querySelector('.edit-icon')
+                        if (editIconElement) {
+                            editIconElement.style.display = 'inline'
+                        }
                     }
                 }
-            }
-        })
+            })
+        }
+
         itemName.addEventListener('blur', (e) => {
             // Check if the click was inside the actions container to prevent conflicts
             // with save/cancel button clicks
@@ -327,20 +343,6 @@ export class EventHandler {
                     itemName,
                     actionsContainer,
                     itemName.textContent,
-                    id,
-                    editIcon
-                )
-            })
-        }
-
-        const cancelButton = actionsContainer.querySelector('.cancel-button')
-        if (cancelButton) {
-            cancelButton.addEventListener('click', () => {
-                eventHandler.exitEditMode(
-                    false,
-                    itemName,
-                    actionsContainer,
-                    originalName,
                     id,
                     editIcon
                 )
