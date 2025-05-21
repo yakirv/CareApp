@@ -148,7 +148,7 @@ export class UI {
             newItemDesc,
             editActionsContainer,
             editDescription,
-            desc.innerHtml,
+            desc,
             id
         )
 
