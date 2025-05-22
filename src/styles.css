@@ -106,7 +106,8 @@ html {
     width: 60%;
     height: 60%;
     border-style: none;
-    background-color: #fbf2ff;
+    /*  background-color: #d6e2e9; */
+    background-color: rgba(214, 226, 233, 0.95);
     border-radius: 30px;
 
     box-shadow: 0 4px 10px 10px rgba(0, 0, 0, 0.1);
@@ -236,7 +237,7 @@ input {
     width: 3em;
     height: 3em;
     border: none;
-    background-color: rgba(0, 0, 0, 0.118);
+    background-color: transparent;
     cursor: pointer;
     transition: background-image 0.3s ease-in-out;
 }
@@ -245,8 +246,8 @@ input {
 }
 #close-modal-button {
     position: relative;
-    right: 48%;
-    bottom: 125%;
+    right: 46%;
+    bottom: 108%;
     background-color: transparent;
     border-style: none;
     font-size: 20px;
