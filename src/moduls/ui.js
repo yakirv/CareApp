@@ -9,7 +9,9 @@ export class UI {
     emptyMessage
     listHeader
     container
-
+    openFutureModalButton
+    closeFutureModalButton
+    taskfutureModal
     taskHourInput
 
     constructor() {
@@ -21,7 +23,12 @@ export class UI {
             this.listHeader = document.getElementById('list-headers')
             this.container = document.querySelector('.container')
             this.taskHourInput = document.getElementById('task-hour')
-
+            this.openFutureModalButton =
+                document.getElementById('open-modal-button')
+            this.closeFutureModalButton =
+                document.getElementById('close-modal-button')
+            this.taskfutureModal = document.getElementById('futureTaskModal')
+            this.initialzeNewTaskModal()
             this.initializeMenu()
             this.renderTasksList()
         })
@@ -31,6 +38,7 @@ export class UI {
         this.openMenu()
         this.closeMenu()
     }
+
     openMenu() {
         this.menuIcon.addEventListener('click', (e) => {
             e.stopPropagation()
@@ -49,6 +57,18 @@ export class UI {
         document.documentElement.addEventListener('click', () => {
             this.actions.style.visibility = 'hidden'
             this.actions.style.opacity = '0'
+        })
+    }
+
+    initialzeNewTaskModal() {
+        this.openFutureModalButton.addEventListener('click', () => {
+            /*   this.taskfutureModal.style.display = 'flex' */
+            console.log('open modal')
+            this.taskfutureModal.showModal()
+        })
+        this.closeFutureModalButton.addEventListener('click', () => {
+            /*  this.taskfutureModal.style.display = 'none' */
+            this.taskfutureModal.close()
         })
     }
 
