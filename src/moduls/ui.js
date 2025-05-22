@@ -10,6 +10,8 @@ export class UI {
     listHeader
     container
 
+    taskHourInput
+
     constructor() {
         document.addEventListener('DOMContentLoaded', () => {
             this.workItemList = document.querySelector('.work-item-list')
@@ -18,6 +20,7 @@ export class UI {
             this.emptyMessage = document.getElementById('empty-list')
             this.listHeader = document.getElementById('list-headers')
             this.container = document.querySelector('.container')
+            this.taskHourInput = document.getElementById('task-hour')
 
             this.initializeMenu()
             this.renderTasksList()
@@ -50,26 +53,57 @@ export class UI {
     }
 
     renderTasksList() {
-        const storedString = JSON.parse(localStorage.getItem('tasksList'))
+        const currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
+        const futureTasks =
+            JSON.parse(localStorage.getItem('futureTasksList')) || []
+        const allTasks = [...currentTasks, ...futureTasks]
 
-        if (storedString) {
+        if (allTasks.length > 0) {
             this.emptyMessage.style.display = 'none'
             this.listHeader.style.display = 'flex'
             this.container.style.display = 'flex'
 
-            for (let i = 0; i < storedString.length; i++) {
-                const taskTime = this.convertHourToString(storedString[i].hour)
-                this.newWorkItem(
-                    storedString[i].name,
-                    storedString[i].desc,
-                    taskTime,
-                    storedString[i].id,
-                    storedString[i].status
+            // Add separator at the top if there are future tasks
+            if (futureTasks.length > 0) {
+                const futureSeparator = this.createElementWithClass(
+                    'div',
+                    'tasks-separator'
                 )
-
-                eventHandler.statusContainer =
-                    document.getElementById('work-item-status')
+                futureSeparator.textContent = 'משימות עתידיות'
+                this.workItemList.appendChild(futureSeparator)
             }
+            // Render future tasks
+            futureTasks.forEach((task) => {
+                const taskTime = this.convertHourToString(task.hour)
+                this.newWorkItem(
+                    task.name,
+                    task.desc,
+                    taskTime,
+                    task.id,
+                    task.status
+                )
+            })
+            const CurrentSeparator = this.createElementWithClass(
+                'div',
+                'tasks-separator'
+            )
+            CurrentSeparator.textContent = 'משימות נוכחיות'
+            this.workItemList.appendChild(CurrentSeparator)
+
+            // Render current tasks
+            currentTasks.forEach((task) => {
+                const taskTime = this.convertHourToString(task.hour)
+                this.newWorkItem(
+                    task.name,
+                    task.desc,
+                    taskTime,
+                    task.id,
+                    task.status
+                )
+            })
+
+            eventHandler.statusContainer =
+                document.getElementById('work-item-status')
         } else {
             this.emptyMessage.style.display = 'block'
             this.listHeader.style.display = 'none'
@@ -96,6 +130,8 @@ export class UI {
                     return `לפני  ${passedTime[1]} שניות`
                 }
                 break
+            default:
+                return storage.formatDate(passedTime[0])
         }
     }
 
@@ -273,7 +309,6 @@ export class UI {
         return actionButtons
     }
 
-    //////////////////////////////////
     createDescriptionSection(description, id) {
         const itemDescContainer = this.createElementWithClass(
             'div',

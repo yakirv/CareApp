@@ -41,11 +41,18 @@ export class Storage {
     }
     storeTasks(taksName, taskDesc, taskhour) {
         if (this.storageAvailable('localStorage')) {
-            let storedTasks = localStorage.getItem('tasksList')
+            const currentDate = new Date()
+            const taskDate = new Date(taskhour)
+
+            // Determine which list to use based on the task date
+            const listKey =
+                taskDate > currentDate ? 'futureTasksList' : 'tasksList'
+
+            let storedTasks = localStorage.getItem(listKey)
 
             if (storedTasks === null) {
-                localStorage.setItem('tasksList', '[]')
-                storedTasks = localStorage.getItem('tasksList')
+                localStorage.setItem(listKey, '[]')
+                storedTasks = localStorage.getItem(listKey)
             }
             let tasksArray = JSON.parse(storedTasks)
             tasksArray.push({
@@ -57,7 +64,7 @@ export class Storage {
             })
             tasksArray = this.sortTasksByDate(tasksArray)
             const updatedDataString = JSON.stringify(tasksArray)
-            localStorage.setItem('tasksList', updatedDataString)
+            localStorage.setItem(listKey, updatedDataString)
         }
     }
     generateRandomId() {
@@ -69,24 +76,41 @@ export class Storage {
 
     calculateTimePassed(taskDate) {
         const current = new Date()
+        taskDate = new Date(taskDate)
+        if (taskDate < current) {
+            const diffMs = current - new Date(taskDate)
 
-        const diffMs = current - new Date(taskDate)
+            const seconds = Math.floor(diffMs / 1000)
+            const minutes = Math.floor(seconds / 60)
+            const hours = Math.floor(minutes / 60)
+            const days = Math.floor(hours / 24)
 
-        const seconds = Math.floor(diffMs / 1000)
-        const minutes = Math.floor(seconds / 60)
-        const hours = Math.floor(minutes / 60)
-        const days = Math.floor(hours / 24)
-
-        if (days > 0) {
-            return ['days', days]
-        } else if (hours > 0) {
-            return ['hours', hours]
-        } else if (minutes > 0) {
-            return ['minutes', minutes]
+            if (days > 0) {
+                return ['days', days]
+            } else if (hours > 0) {
+                return ['hours', hours]
+            } else if (minutes > 0) {
+                return ['minutes', minutes]
+            } else {
+                return ['seconds', seconds]
+            }
         } else {
-            return ['seconds', seconds]
+            return [taskDate, '']
         }
     }
+    formatDate(date) {
+        const d = date ? date : new Date()
+
+        const day = String(d.getDate()).padStart(2, '0')
+        const month = String(d.getMonth() + 1).padStart(2, '0') // Months are 0-indexed
+        const year = d.getFullYear()
+        const hours = String(d.getHours()).padStart(2, '0')
+        const minutes = String(d.getMinutes()).padStart(2, '0')
+
+        // Return the formatted date string
+        return `${day}/${month}/${year} ${hours}:${minutes}`
+    }
+
     deleteTaskFromStorage(arr, idToRemove) {
         return arr.filter((obj) => obj.id !== idToRemove)
     }
