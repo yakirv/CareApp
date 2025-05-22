@@ -29,7 +29,7 @@ html {
     top: 0;
     width: 100%;
     background: #fff;
-    z-index: 1000;
+    z-index: 900;
     padding: env(safe-area-inset-top) 0 0 0;
 }
 
@@ -63,8 +63,6 @@ html {
     display: flex;
     flex-direction: row;
     align-items: center;
-    /*     gap: 20px;
- */
 }
 
 .tasks-separator {
@@ -78,7 +76,44 @@ html {
     background-color: #e07878;
     border-radius: 10px;
 }
+#open-modal-button {
+    position: absolute;
+    left: 5%;
+    top: 90%;
+    font-size: 55px;
+    padding: 0.5em 0.8em;
+    color: white;
+    border-radius: 55px;
+    transform: translateY(-50%);
+    background-color: #cdb4db;
+    opacity: 0.8;
+    box-shadow: 0 4px 10px 10px rgba(0, 0, 0, 0.122);
+    border: none;
+    cursor: pointer;
+}
+.form-overlay {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 75%;
+}
+.modal {
+    position: absolute;
+    z-index: 999;
+    left: 5%;
+    top: 5%;
+    width: 60%;
+    height: 60%;
+    border-style: none;
+    background-color: #fbf2ff;
+    border-radius: 30px;
 
+    box-shadow: 0 4px 10px 10px rgba(0, 0, 0, 0.1);
+}
+.modal::backdrop {
+    background-color: rgba(0, 0, 0, 0.493);
+}
 .edit-icon {
     position: relative;
     right: 10%;
@@ -183,7 +218,9 @@ body {
 #new-task-form {
     display: flex;
     align-items: center;
+    flex-direction: column;
     gap: 1em;
+    width: 100%;
 }
 input {
     border-radius: 20px;
@@ -199,14 +236,22 @@ input {
     width: 3em;
     height: 3em;
     border: none;
-    background-color: transparent;
+    background-color: rgba(0, 0, 0, 0.118);
     cursor: pointer;
     transition: background-image 0.3s ease-in-out;
 }
 #submit-new-task:hover {
     background-image: url('./assets/submit_active.png');
 }
-
+#close-modal-button {
+    position: relative;
+    right: 48%;
+    bottom: 125%;
+    background-color: transparent;
+    border-style: none;
+    font-size: 20px;
+    cursor: pointer;
+}
 #menu-icon {
     height: 60px;
 }
@@ -400,6 +445,11 @@ input {
 
 /* Mobile Styles */
 @media screen and (max-width: 768px) {
+    #close-modal-button {
+        position: relative;
+        right: 2%;
+        bottom: 115%;
+    }
     .task-name-container,
     .task-description-container {
         position: relative;
@@ -409,7 +459,16 @@ input {
     }
     .pull-to-refresh {
         position: absolute;
-        top: 198px;
+        top: 15%;
+    }
+    .modal {
+        left: 5%;
+        top: 5%;
+        border-radius: 30px;
+    }
+    #open-modal-button {
+        font-size: 35px;
+        border-radius: 30px;
     }
     #new-task-form {
         display: flex;

@@ -117,6 +117,7 @@ export class EventHandler {
                 validateHour.isvalid
             ) {
                 storage.storeTasks(taskName, taskDesc, hour)
+                ui.taskfutureModal.close()
                 this.refreshData()
                 newTaskForm.reset()
             }
