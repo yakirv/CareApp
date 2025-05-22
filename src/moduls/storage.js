@@ -62,7 +62,12 @@ export class Storage {
                 hour: taskhour,
                 status: 'waiting',
             })
-            tasksArray = this.sortTasksByDate(tasksArray)
+            if (listKey === 'futureTasksList') {
+                tasksArray = this.sortTasksByDate(tasksArray, true)
+            } else {
+                tasksArray = this.sortTasksByDate(tasksArray)
+            }
+
             const updatedDataString = JSON.stringify(tasksArray)
             localStorage.setItem(listKey, updatedDataString)
         }
@@ -116,8 +121,8 @@ export class Storage {
     }
     sortTasksByDate(
         array = this.listArray,
-        dateKey = 'hour',
-        ascending = false
+        ascending = false,
+        dateKey = 'hour'
     ) {
         return array.slice().sort((a, b) => {
             const dateA = new Date(a[dateKey])
