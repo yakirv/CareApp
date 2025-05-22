@@ -83,7 +83,7 @@ html {
     font-size: 55px;
     padding: 0.5em 0.8em;
     color: white;
-    border-radius: 55px;
+    border-radius: 50px;
     transform: translateY(-50%);
     background-color: #cdb4db;
     opacity: 0.8;
@@ -449,7 +449,7 @@ input {
     #close-modal-button {
         position: relative;
         right: 2%;
-        bottom: 115%;
+        bottom: 100%;
     }
     .task-name-container,
     .task-description-container {
@@ -470,12 +470,23 @@ input {
     #open-modal-button {
         font-size: 35px;
         border-radius: 30px;
+        top: 80%;
     }
     #new-task-form {
         display: flex;
         gap: 1em;
         flex-direction: column;
         align-items: flex-end;
+    }
+    #new-task-form div {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    input {
+        height: 1.5em;
+        width: 13em;
     }
     body {
         overflow: scroll;

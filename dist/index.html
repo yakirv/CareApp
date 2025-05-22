@@ -12,19 +12,8 @@
   <script defer src="main.js"></script></head>
   <body>
     <div class="header">
-      <div id="new-item-form">
-        <form id="new-task-form">
-          <div class="form-group">
-            <label for="task-name">שם:</label>
-            <input type="text" id="task-name" name="new-task-name" required>
-          </div>
-          <div class="form-group">
-            <label for="task-description">תיאור:</label>
-            <input type="text" id="task-description" name="new-task-description" required>
-          </div>
-          <button type="submit" id="submit-new-task"></button>
-        </form>
-        </div>
+ 
+
       <div id="actions" style="visibility: hidden">
               <div class="action-item" id="add-food-action">
           <img class="action-icon" src="c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
@@ -47,11 +36,12 @@
       <img src="5cb191d6ff47e6ab6305.png" alt="menu-icon" id="menu-icon" />
     </div>
     <div class="container">
-      <h1 id="empty-list"> אין משימות</h1>
+      
       <div class="pull-to-refresh">
         <div class="pull-to-refresh__text">משוך לרענון</div>
         <div class="pull-to-refresh__spinner"></div>
       </div>
+      <h1 id="empty-list"> אין משימות</h1>
       <div class="task-list">
        <div id="list-headers">
         <div id="header-item-name">משימה</div>
@@ -66,6 +56,36 @@
     
     </div>
       </div>
-    
+      <button class="" id="open-modal-button">
+        <span class="">+</span>
+        </button>
+        <dialog class="modal" id="futureTaskModal">
+<div class="form-overlay">
+  
+              <form id="new-task-form">
+                <div class="form-group">
+                  <label for="task-name">שם:</label>
+                  <input type="text" id="task-name" name="new-task-name" required>
+                </div>
+                <div class="form-group">
+                  <label for="task-description">תיאור:</label>
+                  <input type="text" id="task-description" name="new-task-description" required>
+                </div>
+                <div class="form-group">
+                  <label for="task-hour">שעה:</label>
+                  <input type="datetime-local" id="task-hour" name="new-task-hour" required>
+                </div>
+                <button type="submit" id="submit-new-task"></button>
+                <button class="close-modal-button" id="close-modal-button">
+                    <svg height="50" width="50" xmlns="http://www.w3.org/2000/svg">
+                      <image width="40" height="40" href="30508a6d00696f2dc5c6.svg" />
+                    </svg>
+                  </button>
+              </form>
+           
+           
+</div> 
+        </dialog>
+
   </body>
 </html>
