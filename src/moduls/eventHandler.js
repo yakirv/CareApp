@@ -33,6 +33,8 @@ export class EventHandler {
             validations.focus_inputValidate('task-name')
             validations.blur_inputValidate('task-description')
             validations.focus_inputValidate('task-description')
+            validations.blur_inputValidate('task-hour')
+            validations.focus_inputValidate('task-hour')
         })
     }
     deviceSupportsHover() {
@@ -103,11 +105,17 @@ export class EventHandler {
             const formData = new FormData(newTaskForm)
             const taskName = formData.get('new-task-name')
             const taskDesc = formData.get('new-task-description')
-            const hour = new Date()
+            const taskHour = formData.get('new-task-hour')
+            const hour = taskHour ? new Date(taskHour) : new Date()
             const validateName = validations.inputValidation('task-name')
             const validateDesc = validations.inputValidation('task-description')
+            const validateHour = validations.inputValidation('task-hour')
 
-            if (validateName.isvalid && validateDesc.isvalid) {
+            if (
+                validateName.isvalid &&
+                validateDesc.isvalid &&
+                validateHour.isvalid
+            ) {
                 storage.storeTasks(taskName, taskDesc, hour)
                 this.refreshData()
                 newTaskForm.reset()
@@ -128,37 +136,101 @@ export class EventHandler {
         })
     }
     deleteTask(id) {
-        const storedArray = localStorage.getItem('tasksList')
-        const taskArray = JSON.parse(storedArray)
-        const updatedDataString = JSON.stringify(
-            storage.deleteTaskFromStorage(taskArray, id)
-        )
+        // Try to delete from current tasks
+        let currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
+        let futureTasks =
+            JSON.parse(localStorage.getItem('futureTasksList')) || []
 
-        localStorage.setItem('tasksList', updatedDataString)
+        // Check if task exists in current tasks
+        const taskExistsInCurrent = currentTasks.some((task) => task.id === id)
+
+        if (taskExistsInCurrent) {
+            const updatedCurrentTasks = storage.deleteTaskFromStorage(
+                currentTasks,
+                id
+            )
+            localStorage.setItem(
+                'tasksList',
+                JSON.stringify(updatedCurrentTasks)
+            )
+        } else {
+            // If not in current tasks, try future tasks
+            const updatedFutureTasks = storage.deleteTaskFromStorage(
+                futureTasks,
+                id
+            )
+            localStorage.setItem(
+                'futureTasksList',
+                JSON.stringify(updatedFutureTasks)
+            )
+        }
+
         this.refreshData()
     }
 
     changeTaskStatus(id) {
-        const storedArray = localStorage.getItem('tasksList')
-        const taskArray = JSON.parse(storedArray)
+        // Try to find and update in current tasks
+        let currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
+        let futureTasks =
+            JSON.parse(localStorage.getItem('futureTasksList')) || []
+        const currentDate = new Date()
 
-        taskArray.forEach((task) => {
-            if (task.id === id) {
-                if (task.status === 'waiting') {
-                    task.status = 'done'
-                    task.hour = new Date()
-                    const updatedDataString = JSON.stringify(taskArray)
-                    localStorage.setItem('tasksList', updatedDataString)
-                    eventHandler.refreshData()
-                } else {
-                    task.status = 'waiting'
-                    task.hour = new Date()
-                    const updatedDataString = JSON.stringify(taskArray)
-                    localStorage.setItem('tasksList', updatedDataString)
-                    eventHandler.refreshData()
+        // Check if task exists in current tasks
+        const taskExistsInCurrent = currentTasks.some((task) => task.id === id)
+
+        if (taskExistsInCurrent) {
+            currentTasks.forEach((task) => {
+                if (task.id === id) {
+                    if (task.status === 'waiting') {
+                        task.status = 'done'
+                        task.hour = new Date()
+                    } else {
+                        task.status = 'waiting'
+                        task.hour = new Date()
+                    }
                 }
-            }
-        })
+            })
+            localStorage.setItem('tasksList', JSON.stringify(currentTasks))
+        } else {
+            // If not in current tasks, try future tasks
+            futureTasks.forEach((task) => {
+                if (task.id === id) {
+                    if (task.status === 'waiting') {
+                        task.status = 'done'
+                        task.hour = new Date()
+                    } else {
+                        task.status = 'waiting'
+                        task.hour = new Date()
+                    }
+                }
+            })
+            localStorage.setItem('futureTasksList', JSON.stringify(futureTasks))
+        }
+
+        // After status change, check if any future tasks should be moved to current tasks
+        futureTasks = JSON.parse(localStorage.getItem('futureTasksList')) || []
+        currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
+
+        const tasksToMove = futureTasks.filter(
+            (task) => new Date(task.hour) <= currentDate
+        )
+
+        if (tasksToMove.length > 0) {
+            // Remove tasks from future list
+            futureTasks = futureTasks.filter(
+                (task) =>
+                    !tasksToMove.some((moveTask) => moveTask.id === task.id)
+            )
+
+            // Add tasks to current list
+            currentTasks = [...currentTasks, ...tasksToMove]
+
+            // Update both lists in localStorage
+            localStorage.setItem('futureTasksList', JSON.stringify(futureTasks))
+            localStorage.setItem('tasksList', JSON.stringify(currentTasks))
+        }
+
+        this.refreshData()
     }
 
     enterEditMode(paragraph, editActions, editIcon) {

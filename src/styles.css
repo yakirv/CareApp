@@ -67,6 +67,18 @@ html {
  */
 }
 
+.tasks-separator {
+    position: relative;
+    padding: 0.2em 0.5em;
+    text-align: center;
+    top: 0;
+    left: 0;
+    right: 0;
+    width: 6.5em;
+    background-color: #e07878;
+    border-radius: 10px;
+}
+
 .edit-icon {
     position: relative;
     right: 10%;
