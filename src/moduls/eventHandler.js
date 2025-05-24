@@ -29,6 +29,7 @@ export class EventHandler {
             this.clickAddSleep()
             this.clickNewTask()
             this.initPullToRefresh()
+            this.initializeFabMenu()
             validations.blur_inputValidate('task-name')
             validations.focus_inputValidate('task-name')
             validations.blur_inputValidate('task-description')
@@ -457,5 +458,16 @@ export class EventHandler {
                 eventHandler.deleteTask(id)
             })
         }
+    }
+
+    initializeFabMenu() {
+        const fabCheckbox = document.getElementById('fabCheckbox')
+        const fabActions = document.querySelectorAll('.fab-action')
+
+        fabActions.forEach((action) => {
+            action.addEventListener('click', () => {
+                fabCheckbox.checked = false
+            })
+        })
     }
 }
