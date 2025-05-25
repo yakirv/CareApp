@@ -127,7 +127,13 @@ export class EventHandler {
 
     clickAddFood() {
         this.addFood.addEventListener('click', () => {
+            const now = new Date()
             storage.storeTasks('נוטרילון', '200 מ״ל', new Date())
+            storage.storeTasks(
+                'נוטרילון',
+                '200 מ״ל',
+                new Date(now.getTime() + 4 * 60 * 60 * 1000)
+            )
             this.refreshData()
         })
     }
