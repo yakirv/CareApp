@@ -175,16 +175,13 @@ export class UI {
         } = this.createDescriptionSection(desc, id)
 
         const newItemStatus = this.createStatusElement(id, status)
-        // const newItemDesc = this.createDescriptionElement(desc)
         const newItemHour = this.createHourElement(hour)
         const actionButtons = this.createActionButtons(id, status)
 
         // Assemble components
         newWorkItem.appendChild(itemNameContainer)
-
         newWorkItem.appendChild(newItemStatus)
         newWorkItem.appendChild(itemDescContainer)
-        //newWorkItem.appendChild(newItemDesc)
         newWorkItem.appendChild(newItemHour)
         newWorkItem.appendChild(actionButtons)
 
@@ -193,6 +190,7 @@ export class UI {
             this.futureTasksList.appendChild(newWorkItem)
         } else {
             this.currentTasksList.appendChild(newWorkItem)
+            this.blinkNewTask()
         }
 
         // Add event listeners separately after DOM creation
@@ -265,17 +263,20 @@ export class UI {
         return saveButton
     }
 
-    /*    createCancelButton(itemName, actionsContainer, name, id, edit) {
-        const cancelButton = this.createElementWithClass(
-            'button',
-            'cancel-button'
-        )
-        cancelButton.setAttribute('aria-label', 'cancel task name')
-        cancelButton.textContent = 'ביטול'
-        cancelButton.dataset.taskId = id
-        cancelButton.dataset.originalName = name
-        return cancelButton
-    } */
+    blinkNewTask() {
+        const firstCurrent = this.futureTasksList.firstElementChild
+        const blinkInterval = setInterval(() => {
+            firstCurrent.style.backgroundColor =
+                firstCurrent.style.backgroundColor ===
+                'rgba(196, 218, 212, 0.45)'
+                    ? 'transparent'
+                    : 'rgb(196, 218, 212, 0.45)'
+        }, 800)
+        setTimeout(() => {
+            clearInterval(blinkInterval)
+            firstCurrent.style.backgroundColor = 'transparent' // Ensure it ends visible
+        }, 5000)
+    }
 
     createStatusElement(id, status) {
         const statusElement = this.createElementWithClass(

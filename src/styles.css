@@ -479,7 +479,7 @@ input {
 }
 #list-headers,
 .work-item {
-    background-color: #a2d2ff;
+    background-color: #a2d2ff70;
     display: flex;
     /*  justify-content: space-between; */
     align-items: center;
