@@ -1,7 +1,7 @@
 .fab-wrapper {
     position: fixed;
     bottom: 9rem;
-    right: 3rem;
+    left: 25rem;
 }
 .fab-checkbox {
     display: none;
@@ -479,7 +479,7 @@ input {
 }
 #list-headers,
 .work-item {
-    background-color: #a2d2ff;
+    background-color: #a2d2ff70;
     display: flex;
     /*  justify-content: space-between; */
     align-items: center;
@@ -609,6 +609,11 @@ input {
 
 /* Mobile Styles */
 @media screen and (max-width: 768px) {
+    .fab-wrapper {
+        position: fixed;
+        bottom: 9rem;
+        right: 3rem;
+    }
     #close-modal-button {
         position: relative;
         right: 2%;
