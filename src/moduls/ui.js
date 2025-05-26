@@ -13,10 +13,14 @@ export class UI {
     closeFutureModalButton
     taskfutureModal
     taskHourInput
+    futureTasksList
+    currentTasksList
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => {
             this.workItemList = document.querySelector('.work-item-list')
+            this.futureTasksList = document.getElementById('future-task-list')
+            this.currentTasksList = document.getElementById('current-task-list')
             this.menuIcon = document.getElementById('menu-icon')
             this.actions = document.getElementById('actions')
             this.emptyMessage = document.getElementById('empty-list')
@@ -84,13 +88,11 @@ export class UI {
             this.container.style.display = 'flex'
 
             // Add separator at the top if there are future tasks
+            const futreSeparator = document.getElementById('future-separator')
             if (futureTasks.length > 0) {
-                const futureSeparator = this.createElementWithClass(
-                    'div',
-                    'tasks-separator'
-                )
-                futureSeparator.textContent = 'משימות עתידיות'
-                this.workItemList.appendChild(futureSeparator)
+                futreSeparator.style.display = 'block'
+            } else {
+                futreSeparator.style.display = 'none'
             }
             // Render future tasks
             futureTasks.forEach((task) => {
@@ -100,15 +102,10 @@ export class UI {
                     task.desc,
                     taskTime,
                     task.id,
-                    task.status
+                    task.status,
+                    'future'
                 )
             })
-            const CurrentSeparator = this.createElementWithClass(
-                'div',
-                'tasks-separator'
-            )
-            CurrentSeparator.textContent = 'משימות נוכחיות'
-            this.workItemList.appendChild(CurrentSeparator)
 
             // Render current tasks
             currentTasks.forEach((task) => {
@@ -156,12 +153,15 @@ export class UI {
     }
 
     clearTaskList() {
-        while (this.workItemList.firstChild) {
-            this.workItemList.removeChild(this.workItemList.firstChild)
+        while (this.currentTasksList.firstChild) {
+            this.currentTasksList.removeChild(this.currentTasksList.firstChild)
+        }
+        while (this.futureTasksList.firstChild) {
+            this.futureTasksList.removeChild(this.futureTasksList.firstChild)
         }
     }
 
-    newWorkItem(name, desc, hour, id, status) {
+    newWorkItem(name, desc, hour, id, status, taskType) {
         // Create main components
         const newWorkItem = this.createElementWithClass('div', 'work-item')
         const { itemNameContainer, newItemName, actionsContainer, edit } =
@@ -189,7 +189,11 @@ export class UI {
         newWorkItem.appendChild(actionButtons)
 
         // Add to DOM
-        this.workItemList.appendChild(newWorkItem)
+        if (taskType === 'future') {
+            this.futureTasksList.appendChild(newWorkItem)
+        } else {
+            this.currentTasksList.appendChild(newWorkItem)
+        }
 
         // Add event listeners separately after DOM creation
         eventHandler.attachEventListeners(

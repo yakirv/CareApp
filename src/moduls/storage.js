@@ -39,7 +39,7 @@ export class Storage {
             }
         }
     }
-    storeTasks(taksName, taskDesc, taskhour) {
+    storeTasks(taksName, taskDesc, taskhour, status = 'waiting') {
         if (this.storageAvailable('localStorage')) {
             const currentDate = new Date()
             const taskDate = new Date(taskhour)
@@ -60,7 +60,7 @@ export class Storage {
                 desc: taskDesc,
                 id: this.generateRandomId(),
                 hour: taskhour,
-                status: 'waiting',
+                status: status,
             })
             if (listKey === 'futureTasksList') {
                 tasksArray = this.sortTasksByDate(tasksArray, true)
