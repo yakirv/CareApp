@@ -12,13 +12,17 @@
   <script defer src="main.js"></script></head>
   <body>
     <div class="header">
- 
+ <div class = 'login-cintainer'>
+  <button id ='login-btn'>Login</button>
+  <button id ='logout-btn'>Logout</button>
+  </div >
+
 
       <div id="actions" style="visibility: hidden">
-              <div class="action-item" id="add-food-action">
-          <img class="action-icon" src="c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
+          <!--     <div class="action-item" id="add-food-action">
+          <img class="action-icon" src="./assets/plusIcon.png" alt="plus-icon"></img>
           <button id="add-food">אוכל </button>
-        </div>
+        </div> -->
         <div class="action-item" id="add-sleep-action">
           <img class="action-icon" src="c2287512b2fb76fdf8be.png" alt="plus-icon"></img>
           <button id="add-sleep">שינה </button>
@@ -33,7 +37,7 @@
         </div>
       
       </div>
-      <img src="5cb191d6ff47e6ab6305.png" alt="menu-icon" id="menu-icon" />
+      <img src="5cb191d6ff47e6ab6305.png" alt="menu-icon" id="menu-icon" style="visibility: hidden;;" />
     </div>
     <div class="container">
       
@@ -49,16 +53,20 @@
         <div id="header-item-description">תיאור</div>
         <div id="header-item-time">עדכון אחרון</div>
         <div id="header-item-time">פעולות</div>
+      </div>
     
-      </div>
+
       <div class="work-item-list">
+       
       </div>
+      <div class="tasks-separator" id="future-separator" style="display: none;">משימות עתידיות </div>
+      <div id="future-task-list">    </div>
+<div class="tasks-separator">משימות נוכחיות </div>
+      <div id="current-task-list">    </div>
     
     </div>
       </div>
-      <button class="" id="open-modal-button">
-        <span class="">+</span>
-        </button>
+
         <dialog class="modal" id="futureTaskModal">
 <div class="form-overlay">
   
@@ -87,5 +95,21 @@
 </div> 
         </dialog>
 
+        <div class="fab-wrapper">
+          <input id="fabCheckbox" type="checkbox" class="fab-checkbox" />
+          <label class="fab" for="fabCheckbox">
+            <span class="fab-dots fab-dots-1"></span>
+            <span class="fab-dots fab-dots-2"></span>
+            <span class="fab-dots fab-dots-3"></span>
+          </label>
+          <div class="fab-wheel">
+            <a class="fab-action fab-action-1">
+              <img src="c2287512b2fb76fdf8be.png"  id ="open-modal-button"alt="" height="30px">
+            </a>
+            <a class="fab-action fab-action-2">
+              <img src="70276bc2529ad915c85d.png"  id="add-food-action"alt="" height="30px">
+            </a>
+          </div>
+        </div>
   </body>
 </html>

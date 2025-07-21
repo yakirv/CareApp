@@ -1,6 +1,6 @@
 import { eventHandler, ui } from '..'
-import { validations } from '..'
-import { storage } from '..'
+import { helpers } from '..'
+import { apiServices } from '..'
 
 export class EventHandler {
     addFood
@@ -14,9 +14,13 @@ export class EventHandler {
     currentY
     isRefreshing
     statusContainer
+    loginButton
+    logoutButton
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => {
+            this.loginButton = document.getElementById('login-btn')
+            this.logoutButton = document.getElementById('logout-btn')
             this.addFood = document.getElementById('add-food-action')
             this.addSleep = document.getElementById('add-sleep-action')
             this.newTaskButton = document.getElementById('submit-new-task')
@@ -26,16 +30,27 @@ export class EventHandler {
             this.currentY = 0
             this.isRefreshing = false
             this.clickAddFood()
-            this.clickAddSleep()
             this.clickNewTask()
             this.initPullToRefresh()
             this.initializeFabMenu()
-            validations.blur_inputValidate('task-name')
-            validations.focus_inputValidate('task-name')
-            validations.blur_inputValidate('task-description')
-            validations.focus_inputValidate('task-description')
-            validations.blur_inputValidate('task-hour')
-            validations.focus_inputValidate('task-hour')
+            this.accountLogin()
+            helpers.blur_inputValidate('task-name')
+            helpers.focus_inputValidate('task-name')
+            helpers.blur_inputValidate('task-description')
+            helpers.focus_inputValidate('task-description')
+            helpers.blur_inputValidate('task-hour')
+            helpers.focus_inputValidate('task-hour')
+        })
+    }
+
+    accountLogin() {
+        this.loginButton.addEventListener('click', (event) => {
+            console.log('Login button clicked')
+            apiServices.loginWithGoogle()
+        })
+        this.logoutButton.addEventListener('click', (event) => {
+            console.log('Logout button clicked')
+            apiServices.logout()
         })
     }
     deviceSupportsHover() {
@@ -102,22 +117,30 @@ export class EventHandler {
         this.newTaskButton.addEventListener('click', (event) => {
             const newTaskForm = document.getElementById('new-task-form')
             event.preventDefault()
-
             const formData = new FormData(newTaskForm)
             const taskName = formData.get('new-task-name')
             const taskDesc = formData.get('new-task-description')
             const taskHour = formData.get('new-task-hour')
             const hour = taskHour ? new Date(taskHour) : new Date()
-            const validateName = validations.inputValidation('task-name')
-            const validateDesc = validations.inputValidation('task-description')
-            const validateHour = validations.inputValidation('task-hour')
+            const validateName = helpers.inputValidation('task-name')
+            const validateDesc = helpers.inputValidation('task-description')
+            const validateHour = helpers.inputValidation('task-hour')
+            let uid = null
 
             if (
                 validateName.isvalid &&
                 validateDesc.isvalid &&
                 validateHour.isvalid
             ) {
-                storage.storeTasks(taskName, taskDesc, hour)
+                apiServices.createTask(
+                    taskName,
+                    taskDesc,
+                    'waiting',
+                    hour.toLocaleString('sv-SE', {
+                        timeZone: 'Asia/Jerusalem',
+                    }),
+                    (uid = helpers.getFirebaseUidFromIndexedDB())
+                )
                 ui.taskfutureModal.close()
                 this.refreshData()
                 newTaskForm.reset()
@@ -126,119 +149,71 @@ export class EventHandler {
     }
 
     clickAddFood() {
+        let user_id = helpers.getFirebaseUidFromIndexedDB().then((uid) => {
+            if (uid) {
+                user_id = uid
+            } else {
+                user_id = null
+            }
+        })
         this.addFood.addEventListener('click', () => {
             const now = new Date()
-            storage.storeTasks('נוטרילון', '200 מ״ל', new Date(), 'done')
-            storage.storeTasks(
-                'נוטרילון',
-                '200 מ״ל',
-                new Date(now.getTime() + 4 * 60 * 60 * 1000)
-            )
-            this.refreshData()
+
+            apiServices
+                .createTask(
+                    'נוטרילון',
+                    '200 מ״ל',
+                    'done',
+                    new Date().toLocaleString('sv-SE', {
+                        timeZone: 'Asia/Jerusalem',
+                    }),
+                    user_id
+                )
+                .then(() => {
+                    apiServices.createTask(
+                        'נוטרילון',
+                        '200 מ״ל',
+                        'waiting',
+                        new Date(
+                            now.getTime() + 4 * 60 * 60 * 1000
+                        ).toLocaleString('sv-SE', {
+                            timeZone: 'Asia/Jerusalem',
+                        }),
+                        user_id
+                    )
+                })
+                .then(() => {
+                    console.log('Food task added successfully')
+                    this.refreshData()
+                })
+                .catch((error) => {
+                    console.error('Error adding food task:', error)
+                })
         })
     }
-    clickAddSleep() {
-        this.addSleep.addEventListener('click', () => {
-            storage.storeTasks('שינה', 'שעתיים', new Date())
-            this.refreshData()
-        })
-    }
+
     deleteTask(id) {
-        // Try to delete from current tasks
-        let currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
-        let futureTasks =
-            JSON.parse(localStorage.getItem('futureTasksList')) || []
-
-        // Check if task exists in current tasks
-        const taskExistsInCurrent = currentTasks.some((task) => task.id === id)
-
-        if (taskExistsInCurrent) {
-            const updatedCurrentTasks = storage.deleteTaskFromStorage(
-                currentTasks,
-                id
-            )
-            localStorage.setItem(
-                'tasksList',
-                JSON.stringify(updatedCurrentTasks)
-            )
-        } else {
-            // If not in current tasks, try future tasks
-            const updatedFutureTasks = storage.deleteTaskFromStorage(
-                futureTasks,
-                id
-            )
-            localStorage.setItem(
-                'futureTasksList',
-                JSON.stringify(updatedFutureTasks)
-            )
-        }
-
-        this.refreshData()
+        apiServices
+            .deleteTask(id)
+            .then(() => {
+                console.log(`Task ${id} deleted successfully`)
+                this.refreshData()
+            })
+            .catch((error) => {
+                console.error(`Error deleting task ${id}:`, error)
+            })
     }
 
-    changeTaskStatus(id) {
-        // Try to find and update in current tasks
-        let currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
-        let futureTasks =
-            JSON.parse(localStorage.getItem('futureTasksList')) || []
-        const currentDate = new Date()
-
-        // Check if task exists in current tasks
-        const taskExistsInCurrent = currentTasks.some((task) => task.id === id)
-
-        if (taskExistsInCurrent) {
-            currentTasks.forEach((task) => {
-                if (task.id === id) {
-                    if (task.status === 'waiting') {
-                        task.status = 'done'
-                        task.hour = new Date()
-                    } else {
-                        task.status = 'waiting'
-                        task.hour = new Date()
-                    }
-                }
+    changeTaskStatus(id, status) {
+        apiServices
+            .updateTask(id, null, null, status)
+            .then(() => {
+                console.log(`Task ${id} status changed to ${status}`)
+                this.refreshData()
             })
-            localStorage.setItem('tasksList', JSON.stringify(currentTasks))
-        } else {
-            // If not in current tasks, try future tasks
-            futureTasks.forEach((task) => {
-                if (task.id === id) {
-                    if (task.status === 'waiting') {
-                        task.status = 'done'
-                        task.hour = new Date()
-                    } else {
-                        task.status = 'waiting'
-                        task.hour = new Date()
-                    }
-                }
+            .catch((error) => {
+                console.error(`Error changing task ${id} status:`, error)
             })
-            localStorage.setItem('futureTasksList', JSON.stringify(futureTasks))
-        }
-
-        // After status change, check if any future tasks should be moved to current tasks
-        futureTasks = JSON.parse(localStorage.getItem('futureTasksList')) || []
-        currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
-
-        const tasksToMove = futureTasks.filter(
-            (task) => new Date(task.hour) <= currentDate
-        )
-
-        if (tasksToMove.length > 0) {
-            // Remove tasks from future list
-            futureTasks = futureTasks.filter(
-                (task) =>
-                    !tasksToMove.some((moveTask) => moveTask.id === task.id)
-            )
-
-            // Add tasks to current list
-            currentTasks = [...currentTasks, ...tasksToMove]
-
-            // Update both lists in localStorage
-            localStorage.setItem('futureTasksList', JSON.stringify(futureTasks))
-            localStorage.setItem('tasksList', JSON.stringify(currentTasks))
-        }
-
-        this.refreshData()
     }
 
     enterEditMode(paragraph, editActions, editIcon) {
@@ -295,7 +270,6 @@ export class EventHandler {
     exitEditMode(save, paragraph, editActions, origName, id, editIcon) {
         if (!paragraph || !editActions) {
             console.error('Missing required elements for exiting edit mode')
-            return
         }
 
         // Handle content restoration if not saving
@@ -308,16 +282,15 @@ export class EventHandler {
             // Save changes if needed
             if (save && id) {
                 if (paragraph.id === 'work-item-name') {
-                    storage.editTaskName(
-                        id,
-                        paragraph.textContent.trim(),
-                        'taskName'
-                    )
+                    apiServices.updateTask(id, paragraph.textContent.trim()),
+                        null,
+                        null
                 } else if (paragraph.id === 'work-item-description') {
-                    storage.editTaskName(
+                    apiServices.updateTask(
                         id,
+                        null,
                         paragraph.textContent.trim(),
-                        'descName'
+                        null
                     )
                 }
             }
@@ -430,7 +403,7 @@ export class EventHandler {
         if (saveButton) {
             saveButton.addEventListener('click', () => {
                 console.log('Save button clicked')
-                eventHandler.exitEditMode(
+                this.exitEditMode(
                     true,
                     itemName,
                     actionsContainer,
@@ -452,7 +425,12 @@ export class EventHandler {
                 `button[aria-label="${id}"].status-button`
             )
             newStatusButton.addEventListener('click', () => {
-                eventHandler.changeTaskStatus(id)
+                if (newStatusButton.classList.contains('change-to-waiting')) {
+                    eventHandler.changeTaskStatus(id, 'waiting')
+                }
+                if (newStatusButton.classList.contains('change-to-done')) {
+                    eventHandler.changeTaskStatus(id, 'done')
+                }
             })
         }
 
@@ -460,7 +438,9 @@ export class EventHandler {
             `#work-item-delete[data-task-id="${id}"]`
         )
         if (deleteButton) {
-            deleteButton.addEventListener('click', () => {
+            const newDeleteButton = deleteButton.cloneNode(true)
+            deleteButton.parentNode.replaceChild(newDeleteButton, deleteButton)
+            newDeleteButton.addEventListener('click', () => {
                 eventHandler.deleteTask(id)
             })
         }

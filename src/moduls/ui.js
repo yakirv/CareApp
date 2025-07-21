@@ -1,5 +1,6 @@
 import { de } from 'date-fns/locale'
-import { eventHandler, storage } from '..'
+import { eventHandler, helpers } from '..'
+import { apiServices } from '..'
 import editIcon from '../assets/edit_icon.png'
 
 export class UI {
@@ -76,60 +77,47 @@ export class UI {
         })
     }
 
-    renderTasksList() {
-        const currentTasks = JSON.parse(localStorage.getItem('tasksList')) || []
-        const futureTasks =
-            JSON.parse(localStorage.getItem('futureTasksList')) || []
-        const allTasks = [...currentTasks, ...futureTasks]
+    async renderTasksList() {
+        const tasksList = await apiServices.fetchTasks()
+        const futreSeparator = document.getElementById('future-separator')
+        // this.clearTaskList() // Clear existing tasks before rendering new ones
+        this.emptyMessage.style.display = 'none'
+        this.listHeader.style.display = 'flex'
+        this.container.style.display = 'flex'
 
-        if (allTasks.length > 0) {
-            this.emptyMessage.style.display = 'none'
-            this.listHeader.style.display = 'flex'
-            this.container.style.display = 'flex'
+        if (tasksList.futureTasks.length > 0) {
+            futreSeparator.style.display = 'block'
 
-            // Add separator at the top if there are future tasks
-            const futreSeparator = document.getElementById('future-separator')
-            if (futureTasks.length > 0) {
-                futreSeparator.style.display = 'block'
-            } else {
-                futreSeparator.style.display = 'none'
-            }
-            // Render future tasks
+            const futureTasks = tasksList.futureTasks
             futureTasks.forEach((task) => {
                 const taskTime = this.convertHourToString(task.hour)
                 this.newWorkItem(
-                    task.name,
-                    task.desc,
-                    taskTime,
+                    task.title,
+                    task.description,
+                    this.convertHourToString(task.created_at) || taskTime,
                     task.id,
-                    task.status,
+                    task.completed,
                     'future'
                 )
             })
-
-            // Render current tasks
-            currentTasks.forEach((task) => {
+        } else {
+            futreSeparator.style.display = 'none'
+        }
+        if (tasksList.currentTasks.length > 0) {
+            tasksList.currentTasks.forEach((task) => {
                 const taskTime = this.convertHourToString(task.hour)
                 this.newWorkItem(
-                    task.name,
-                    task.desc,
-                    taskTime,
+                    task.title,
+                    task.description,
+                    this.convertHourToString(task.created_at) || taskTime,
                     task.id,
-                    task.status
+                    task.completed
                 )
             })
-
-            eventHandler.statusContainer =
-                document.getElementById('work-item-status')
-        } else {
-            this.emptyMessage.style.display = 'block'
-            this.listHeader.style.display = 'none'
-            this.container.style.display = 'block'
-            this.container.style.textAlign = 'center'
         }
     }
     convertHourToString(hour) {
-        const passedTime = storage.calculateTimePassed(hour)
+        const passedTime = helpers.calculateTimePassed(hour)
         switch (passedTime[0]) {
             case 'days':
                 return `לפני  ${passedTime[1]} ימים`
@@ -148,7 +136,7 @@ export class UI {
                 }
                 break
             default:
-                return storage.formatDate(passedTime[0])
+                return helpers.formatDate(passedTime[0])
         }
     }
 
@@ -190,7 +178,7 @@ export class UI {
             this.futureTasksList.appendChild(newWorkItem)
         } else {
             this.currentTasksList.appendChild(newWorkItem)
-            this.blinkNewTask()
+            //    this.blinkNewTask()
         }
 
         // Add event listeners separately after DOM creation

@@ -1,12 +1,10 @@
 import { EventHandler } from './moduls/eventHandler'
 import { UI } from './moduls/ui'
-import { Validations } from './moduls/validations'
-import { Storage } from './moduls/storage'
-
+import { Helpers } from './moduls/helpers'
+import { ApiServices } from './moduls/apiServices'
 import './styles.css'
 
 export const eventHandler = new EventHandler()
 export const ui = new UI()
-export const validations = new Validations()
-
-export const storage = new Storage()
+export const helpers = new Helpers()
+export const apiServices = new ApiServices()

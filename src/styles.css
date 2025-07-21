@@ -252,6 +252,22 @@ html {
     border: none;
     cursor: pointer;
 } */
+#login-btn {
+    position: absolute;
+    right: 5%;
+    top: 50%;
+    font-size: 25px;
+    padding: 0.5em 0.8em;
+    color: white;
+    border-radius: 50px;
+    transform: translateY(-50%);
+    background-color: #1747478c;
+    border: 1px solid #ffffff;
+    opacity: 0.8;
+    box-shadow: 0 4px 10px 10px rgba(0, 0, 0, 0.122);
+    border: none;
+    cursor: pointer;
+}
 .form-overlay {
     display: flex;
     flex-direction: column;
