@@ -2,6 +2,7 @@ const path = require('path')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
 const { watchFile } = require('fs')
 const webpack = require('webpack')
+const Dotenv = require('dotenv-webpack')
 
 module.exports = {
     entry: './src/index.js',
@@ -28,6 +29,7 @@ module.exports = {
             template: './src/template.html',
             //    filename: 'template.html',
         }),
+        new Dotenv(),
     ],
 
     module: {
