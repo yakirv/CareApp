@@ -13,12 +13,12 @@ export class ApiServices {
     }
     //google login
     firebaseConfig = {
-        apiKey: 'AIzaSyCfPD6ZMrCr28et1hlLYOERtXT6saRtbD4',
-        authDomain: 'mycareapp-466613.firebaseapp.com',
-        projectId: 'mycareapp-466613',
-        storageBucket: 'mycareapp-466613.firebasestorage.app',
-        messagingSenderId: '537324139694',
-        appId: '1:537324139694:web:8e0634571882374b6ce93f',
+        apiKey: process.env.apiKey,
+        authDomain: process.env.authDomain,
+        projectId: process.env.projectId,
+        storageBucket: process.env.storageBucket,
+        messagingSenderId: process.env.messagingSenderId,
+        appId: process.env.appId,
     }
     app = initializeApp(this.firebaseConfig)
     auth = getAuth(this.app)
