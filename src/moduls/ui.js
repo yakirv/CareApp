@@ -1,6 +1,7 @@
 import { de } from 'date-fns/locale'
 import { eventHandler, helpers } from '..'
 import { apiServices } from '..'
+
 import editIcon from '../assets/edit_icon.png'
 
 export class UI {
@@ -75,6 +76,10 @@ export class UI {
             /*  this.taskfutureModal.style.display = 'none' */
             this.taskfutureModal.close()
         })
+    }
+    userNameContainer(userDisplayName) {
+        const userName = document.getElementById('user-name')
+        userName.textContent = userDisplayName
     }
 
     async renderTasksList() {
