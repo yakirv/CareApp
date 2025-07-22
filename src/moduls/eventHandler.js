@@ -16,6 +16,7 @@ export class EventHandler {
     statusContainer
     loginButton
     logoutButton
+    user_id
 
     constructor() {
         document.addEventListener('DOMContentLoaded', () => {
@@ -29,6 +30,7 @@ export class EventHandler {
             this.startY = 0
             this.currentY = 0
             this.isRefreshing = false
+            this.user_id = null
             this.clickAddFood()
             this.clickNewTask()
             this.initPullToRefresh()
@@ -132,15 +134,20 @@ export class EventHandler {
                 validateDesc.isvalid &&
                 validateHour.isvalid
             ) {
-                apiServices.createTask(
-                    taskName,
-                    taskDesc,
-                    'waiting',
-                    hour.toLocaleString('sv-SE', {
-                        timeZone: 'Asia/Jerusalem',
-                    }),
-                    (uid = helpers.getFirebaseUidFromIndexedDB())
-                )
+                this.user_id = helpers
+                    .getFirebaseUidFromIndexedDB()
+                    .then((uid) => {
+                        apiServices.createTask(
+                            taskName,
+                            taskDesc,
+                            'waiting',
+                            hour.toLocaleString('sv-SE', {
+                                timeZone: 'Asia/Jerusalem',
+                            }),
+                            (this.user_id = uid)
+                        )
+                    })
+
                 ui.taskfutureModal.close()
                 this.refreshData()
                 newTaskForm.reset()
@@ -149,46 +156,46 @@ export class EventHandler {
     }
 
     clickAddFood() {
-        let user_id = helpers.getFirebaseUidFromIndexedDB().then((uid) => {
-            if (uid) {
-                user_id = uid
-            } else {
-                user_id = null
-            }
-        })
         this.addFood.addEventListener('click', () => {
             const now = new Date()
+            this.user_id = helpers.getFirebaseUidFromIndexedDB().then((uid) => {
+                if (!uid) {
+                    console.error('User ID not found in IndexedDB')
+                    return
+                }
+                this.user_id = uid
 
-            apiServices
-                .createTask(
-                    'נוטרילון',
-                    '200 מ״ל',
-                    'done',
-                    new Date().toLocaleString('sv-SE', {
-                        timeZone: 'Asia/Jerusalem',
-                    }),
-                    user_id
-                )
-                .then(() => {
-                    apiServices.createTask(
+                apiServices
+                    .createTask(
                         'נוטרילון',
                         '200 מ״ל',
-                        'waiting',
-                        new Date(
-                            now.getTime() + 4 * 60 * 60 * 1000
-                        ).toLocaleString('sv-SE', {
+                        'done',
+                        new Date().toLocaleString('sv-SE', {
                             timeZone: 'Asia/Jerusalem',
                         }),
-                        user_id
+                        this.user_id
                     )
-                })
-                .then(() => {
-                    console.log('Food task added successfully')
-                    this.refreshData()
-                })
-                .catch((error) => {
-                    console.error('Error adding food task:', error)
-                })
+                    .then(() => {
+                        apiServices.createTask(
+                            'נוטרילון',
+                            '200 מ״ל',
+                            'waiting',
+                            new Date(
+                                now.getTime() + 4 * 60 * 60 * 1000
+                            ).toLocaleString('sv-SE', {
+                                timeZone: 'Asia/Jerusalem',
+                            }),
+                            this.user_id
+                        )
+                    })
+                    .then(() => {
+                        console.log('Food task added successfully')
+                        this.refreshData()
+                    })
+                    .catch((error) => {
+                        console.error('Error adding food task:', error)
+                    })
+            })
         })
     }
 
