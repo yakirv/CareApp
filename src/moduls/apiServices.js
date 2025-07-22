@@ -6,6 +6,7 @@ import {
     signOut,
 } from 'firebase/auth'
 import { helpers } from '..'
+import { ui } from '..'
 
 export class ApiServices {
     constructor() {
@@ -30,12 +31,14 @@ export class ApiServices {
             const logoutBtn = document.getElementById('logout-btn')
 
             if (user) {
+                ui.userNameContainer(`היי, ${user.displayName}`)
                 // User is signed in
                 console.log('User is signed in:', user.email)
                 if (loginBtn) loginBtn.style.display = 'none'
                 if (logoutBtn) logoutBtn.style.display = 'block'
             } else {
                 // User is signed out
+                ui.userNameContainer('שלום אורח')
                 console.log('User is signed out')
                 if (loginBtn) loginBtn.style.display = 'block'
                 if (logoutBtn) logoutBtn.style.display = 'none'
@@ -71,7 +74,9 @@ export class ApiServices {
                 // Update UI to show logged in state
                 document.getElementById('login-btn').style.display = 'none'
                 document.getElementById('logout-btn').style.display = 'block'
+
                 const user = result.user
+                //ui.userNameContainer(user.displayName)
                 await fetch('http://localhost:3000/api/users', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
@@ -81,7 +86,7 @@ export class ApiServices {
                         email: user.email,
                     }),
                 })
-                alert(`Welcome, ${result.user.displayName}`)
+                //alert(`Welcome, ${result.user.displayName}`)
                 helpers
                     .getFirebaseUidFromIndexedDB()
                     .then((uid) => {
